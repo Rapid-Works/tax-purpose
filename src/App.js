@@ -13,6 +13,7 @@ import { translations } from './translations'
 import PrivacyPolicy from "./components/PrivacyPolicy"
 import Impressum from "./components/Impressum"
 import ScrollToTop from "./components/ScrollToTop"
+import Logo from "./components/Logo"
 
 console.log('Image path:', bigFourImage);
 
@@ -32,24 +33,6 @@ const HomePageContent = ({ t, lang, services, currentTestimonials, insightImages
     <>
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center bg-gradient-to-br from-background via-white to-primary/10">
-        {/* Add floating calculator icons */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-20 left-[15%] w-64 h-64 opacity-[0.03] rotate-[12deg]">
-            <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full text-accent">
-              <path d="M4 2h16a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm0 2v16h16V4H4zm2 2h12v2H6V6zm0 4h2v2H6v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2zm-8 4h2v2H6v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2zm-8 4h2v2H6v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2z" />
-            </svg>
-          </div>
-          <div className="absolute bottom-20 right-[10%] w-48 h-48 opacity-[0.03] -rotate-[12deg]">
-            <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full text-accent">
-              <path d="M5 2h14a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm0 2v16h14V4H5zm2 2h10v2H7V6zm0 4h2v2H7v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2zm-8 4h2v2H6v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2zm-8 4h2v2H6v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2z" />
-            </svg>
-          </div>
-        </div>
-        {/* Existing grid pattern with improved opacity */}
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(232,189,230,0.15)_1px,transparent_1px),linear-gradient(90deg,rgba(232,189,230,0.15)_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-        </div>
-
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-32">
           <div className="grid gap-16 lg:grid-cols-2 items-center">
             <div className="space-y-10">
@@ -103,31 +86,10 @@ const HomePageContent = ({ t, lang, services, currentTestimonials, insightImages
             </div>
           </div>
         </div>
-
-        {/* Add decorative elements to the hero section */}
-        <div className="absolute top-1/4 left-10 w-64 h-64 rounded-full bg-primary/10 mix-blend-multiply blur-3xl animate-blob"></div>
-        <div className="absolute bottom-1/4 right-10 w-64 h-64 rounded-full bg-accent/10 mix-blend-multiply blur-3xl animate-blob animation-delay-2000"></div>
       </section>
 
       {/* Services Section */}
       <section id="services" className="py-32 relative bg-white overflow-hidden">
-        {/* Add floating numbers and symbols */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-40 left-10 text-[120px] font-serif opacity-[0.03] rotate-[-12deg] text-accent">
-            §
-          </div>
-          <div className="absolute bottom-20 right-10 text-[160px] font-serif opacity-[0.03] rotate-[8deg] text-accent">
-            €
-          </div>
-          <div className="absolute top-1/3 right-1/4 text-[140px] font-serif opacity-[0.03] rotate-[-5deg] text-accent">
-            $
-          </div>
-        </div>
-        {/* More organic, leaf-like pattern */}
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(232,189,230,0.15)_2px,transparent_2px),linear-gradient(90deg,rgba(232,189,230,0.15)_2px,transparent_2px)] bg-[size:48px_48px] [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black_70%)]"></div>
-        </div>
-
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <span className="inline-flex px-4 py-1.5 text-sm font-medium bg-accent text-white rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5">
@@ -185,14 +147,6 @@ const HomePageContent = ({ t, lang, services, currentTestimonials, insightImages
 
       {/* About Section */}
       <section id="about" className="pt-32 pb-12 relative bg-background overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(232,189,230,0.2)_1px,transparent_1px),linear-gradient(90deg,rgba(232,189,230,0.2)_1px,transparent_1px)] bg-[size:32px_32px]"></div>
-          <div className="absolute top-20 right-20 w-96 h-96 opacity-[0.02]">
-            <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full text-accent">
-              <path d="M4 2h16a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm0 2v16h16V4H4zm2 2h12v2H6V6zm0 4h2v2H6v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2zm-8 4h2v2H6v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2zm-8 4h2v2H6v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2z" />
-            </svg>
-          </div>
-        </div>
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <span className="inline-block px-4 py-1 rounded-full bg-primary/20 text-text text-sm font-medium mb-3">
@@ -301,12 +255,10 @@ const HomePageContent = ({ t, lang, services, currentTestimonials, insightImages
             </p>
           )}
         </div>
-        <div className="absolute -bottom-16 -right-16 w-64 h-64 rounded-full bg-accent/5 blur-3xl"></div>
       </section>
 
       {/* Testimonials Section */}
       <section id="testimonials" className="pt-12 pb-24 relative bg-background">
-        <div className="absolute inset-0 bg-[radial-gradient(#e8bde6_1px,transparent_1px)] [background-size:20px_20px] opacity-20"></div>
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 animate-fade-in">
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4 text-text font-serif">
@@ -441,7 +393,6 @@ const HomePageContent = ({ t, lang, services, currentTestimonials, insightImages
 
       {/* Contact Section */}
       <section id="contact" className="py-24 relative bg-white">
-        <div className="absolute inset-0 bg-[radial-gradient(#e8bde6_1px,transparent_1px)] [background-size:20px_20px] opacity-10"></div>
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 animate-on-scroll">
             <span className="inline-block px-4 py-1 rounded-full bg-primary/20 text-text text-sm font-medium mb-3">
@@ -694,7 +645,7 @@ function App() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex h-24 items-center justify-between">
               <Link to="/" className="flex items-center">
-                <img src={leilaLogo} alt="tax & purpose logo, stylized olive branch and text" className="h-12 w-auto" />
+                <Logo />
               </Link>
 
               <div className="hidden lg:flex lg:items-center lg:gap-8">
@@ -823,7 +774,6 @@ function App() {
         </main>
 
       <footer className="relative bg-[#393639] text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(#e4bfbf_1px,transparent_1px)] [background-size:32px_32px] opacity-5"></div>
         <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           <div className="grid gap-8 lg:grid-cols-3">
             <div className="space-y-4">
@@ -880,12 +830,9 @@ function App() {
               <Link to="/privacy-policy" className="hover:text-primary transition-colors">
                 {t.footer.privacyLink || "Privacy Policy"}
               </Link>
-              <span className="mx-2">|</span>
-              <Link to="/imprint" className="hover:text-primary transition-colors">
+              <Link to="/imprint" className="hover:text-primary transition-colors ml-4">
                 {t.footer.imprintLink || "Imprint"}
               </Link>
-              <span className="mx-2">|</span>
-              <a href="#" className="hover:text-primary transition-colors">Terms of Service</a>
             </div>
           </div>
         </div>

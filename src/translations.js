@@ -3,7 +3,7 @@ export const translations = {
     nav: {
       home: "Home",
       services: "Services",
-      about: "About",
+      about: "About me",
       partners: "Partners",
       contact: "Contact",
       schedule: "Schedule Consultation",
@@ -26,7 +26,7 @@ export const translations = {
     services: {
       tag: "My Expertise",
       title: "Sustainable Tax Solutions with a Holistic View",
-      description: "I support companies and organizations in mastering their tax challenges while pursuing their economic, social, and sustainable goals.",
+      description: "I support value-driven companies and organizations in mastering their tax challenges while pursuing their economic, social, and sustainable goals.",
       cards: {
         social: {
           title: "Taxes for Social Enterprises & NPOs",
@@ -55,7 +55,7 @@ export const translations = {
           description: "Comprehensive advice for globally operating companies with a focus on social and environmental responsibility.",
           features: [
             "International sustainable tax planning",
-            "Double taxation agreements, foreign tax law, permanent establishments",
+            "Double taxation agreements, foreign tax law, EU law",
             "Choice of legal form and restructuring for inbound and outbound investments",
             "Cross-border transactions (due diligence, structuring, contract reviews)",
             "Cross-border financing"
@@ -67,18 +67,19 @@ export const translations = {
     about: {
       tag: "My Vision",
       title: "Driving Change Through Tax Expertise",
-      description: "Founded by Dr. Leila Momen, tax & purpose combines decades of international tax consulting experience with a strong commitment to social and ecological responsibility and impact.",
+      description: "I founded tax&purpose out of my deep-rooted desire to rethink tax consulting for purpose-driven entrepreneurs. With my 30 years of international tax expertise, I am familiar with classic national and international tax structures, tax optimization strategies, and their limitations. I create sustainable structures with substance and purpose.",
       imageAlt1: "Dr. Leila Momen in a professional setting",
       imageAlt2: "Dr. Leila Momen outdoors",
       valueProposition: {
         title: "My Value Proposition",
+        intro: "I combine tax clarity with passion, responsibility, sustainability, and a global perspective:",
         points: [
           "Comprehensive tax expertise",
           "International focus & network",
           "Passion and understanding for social and sustainable business models",
           "Sustainable tax planning",
           "Individual & strategic advice with a holistic view",
-          "Proactive and optimal solutions instead of standard"
+          "Proactive and tax-compliant solutions"
         ]
       },
       mindsetChange: {
@@ -88,7 +89,7 @@ export const translations = {
           "From cost to investment in meaningful projects",
           "From burden to positive impact",
           "From complexity to clarity",
-          "From tax avoidance models to responsible tax policy and transparency",
+          "From tax saving models to responsible tax policy and transparency",
           "From artificial structuring to tax design of sustainable business models",
           "From shareholder value maximization to sustainable corporate forms"
         ]
@@ -179,7 +180,7 @@ export const translations = {
       tag: "Frequently Asked Questions",
       title: "Answers to Your Questions",
       description: "Find answers to common questions about my services and my approach.",
-      showTermsButton: "Explanations of terms relevant to the Purpose Economy",
+      showTermsButton: "Explanations of terms in the context of my consulting",
       items: [
         {
           question: "What distinguishes tax & purpose from traditional tax advisors?",
@@ -315,19 +316,6 @@ export const translations = {
           `
         },
         {
-          question: "What does tax transaction advisory cover?",
-          answer: `
-            <p>Tax transaction advisory involves the tax support and optimization of corporate transactions. Key aspects include:</p>
-            <ol>
-              <li><strong>Tax Due Diligence:</strong> Thorough examination of a company's tax situation before a transaction to identify potential tax risks.</li>
-              <li><strong>Tax Structuring:</strong> Developing tax-optimal structures for acquisitions, sales, conversions, or restructurings.</li>
-              <li><strong>Contract Negotiations:</strong> Assisting in the tax-related drafting and negotiation of purchase agreements to achieve tax advantages and minimize risks (negotiating tax-optimized clauses).</li>
-              <li><strong>Post-Transaction Advisory:</strong> Advice after the transaction closes to ensure effective implementation of tax structures and fulfillment of all tax obligations.</li>
-            </ol>
-            <p>This helps companies achieve tax efficiency and ensure tax certainty (minimizing tax risks) during transactions.</p>
-          `
-        },
-        {
           question: "What is Tax Risk Management and a Tax Risk Management System (TRMS)?",
           answer: `
             <p>Tax Risk Management refers to the process of identifying, assessing, mitigating, and monitoring tax risks affecting businesses and individuals.</p>
@@ -364,25 +352,12 @@ export const translations = {
               <li><strong>Abuse of Structuring Options:</strong> Contracts should be designed to avoid being considered an abuse of structuring options under § 42 AO (German Fiscal Code), which can carry significant tax risks.</li>
             </ol>
           `
-        },
-        {
-          question: "What does tax transaction advisory cover?",
-          answer: `
-            <p>Tax transaction advisory involves the tax support and optimization of corporate transactions. Key aspects include:</p>
-            <ol>
-              <li><strong>Tax Due Diligence:</strong> Thorough examination of a company's tax situation before a transaction to identify potential tax risks.</li>
-              <li><strong>Tax Structuring:</strong> Developing tax-optimal structures for acquisitions, sales, conversions, or restructurings.</li>
-              <li><strong>Contract Negotiations:</strong> Assisting in the tax-related drafting and negotiation of purchase agreements to achieve tax advantages and minimize risks (negotiating tax-optimized clauses).</li>
-              <li><strong>Post-Transaction Advisory:</strong> Advice after the transaction closes to ensure effective implementation of tax structures and fulfillment of all tax obligations.</li>
-            </ol>
-            <p>This helps companies achieve tax efficiency and ensure tax certainty (minimizing tax risks) during transactions.</p>
-          `
         }
        ]
     },
     privacyPolicy: {
       title: "Privacy Policy for taxandpurpose.de",
-      lastUpdated: "Last Updated: April 22, 2025",
+      lastUpdated: "Last Updated: 27 May 2025",
       sections: [
         {
           title: "1. Introduction",
@@ -669,7 +644,7 @@ export const translations = {
         },
         {
           question: "Für welche Unternehmen ist tax&purpose geeignet?",
-          answer: "Ich biete meine Beratung für folgende wertorientierte Unternehmen und Organisationen an:<ul><li>Sozialunternehmen</li><li>Non-profit organizations (NPOs)</li><li>Etablierte Unternehmen mit starkem Fokus auf Nachhaltigkeit (ESG)</li><li>Startups im grünen oder sozialen Sektor</li></ul><p>Auch und insbesondere für etablierte Unternehmen, die eine stärkere Sinnorientierung anstreben, stehe ich gerne und selbstverständlich mit meiner Beratung zur Verfügung.</p>"
+          answer: "Ich biete meine Beratung für folgende wertorientierte Unternehmen und Organisationen an:<ul><li>Sozialunternehmen</li><li>Non-profit organizations (NPOs)</li><li>Established companies with a strong focus on sustainability (ESG)</li><li>Startups im grünen oder sozialen Sektor</li></ul><p>Auch und insbesondere für etablierte Unternehmen, die eine stärkere Sinnorientierung anstreben, stehe ich gerne und selbstverständlich mit meiner Beratung zur Verfügung.</p>"
         },
         {
           question: "Bietest du auch klassische Steuerberatungsleistungen an?",
@@ -851,7 +826,7 @@ export const translations = {
     },
     privacyPolicy: {
       title: "Datenschutzerklärung für taxandpurpose.de",
-      lastUpdated: "Stand: 22. April 2025",
+      lastUpdated: "Stand: 27. Mai 2025",
       sections: [
         {
           title: "1. Einleitung",
@@ -859,7 +834,7 @@ export const translations = {
         },
         {
           title: "2. Verantwortlicher",
-          content: "Verantwortlicher gemäß Art. 4 DSGVO:\ntax&purpose\nDr. Leila Momen\nJülicher Straße 72a\n52070 Aachen\nEmail: contact@taxandpurpose.de\nTelefon: +49 151 44508604\n\nHinweis zum Datenschutzbeauftragten:\nGemäß § 38 BDSG besteht für mich als Steuerberaterin in einer Einzelkanzlei mit weniger als 20 Angestellten keine gesetzliche Pflicht zur Bestellung eines Datenschutzbeauftragten."
+          content: "Verantwortlicher gemäß Art. 4 DSGVO:\ntax&purpose\nDr. Leila Momen\nJülicher Straße 72a\n52070 Aachen\nEmail: contact@taxandpurpose.de\nPhone: +49 151 44508604\n\nNote on the Data Protection Officer:\nAccording to § 38 BDSG (German Federal Data Protection Act), as a tax advisor in a sole proprietorship with fewer than 20 employees, there is no legal obligation for me to appoint a data protection officer."
         },
         {
           title: "3. Datenverarbeitung auf der Website",
