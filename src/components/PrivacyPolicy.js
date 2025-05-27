@@ -30,7 +30,7 @@ const PrivacyPolicy = ({ t }) => {
                 <p className="text-base">{renderContent(section.content)}</p>
               )}
               {section.subsections && section.subsections.map((subsection, subIndex) => (
-                <div key={subIndex} className="mt-6 pl-4 border-l-2 border-primary/50">
+                <div key={subIndex} className="mt-6 pl-4">
                   <h3 className="text-xl font-semibold mb-2">{subsection.title}</h3>
                   <p className="text-base">{renderContent(subsection.content)}</p>
                 </div>

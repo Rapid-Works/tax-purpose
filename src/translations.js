@@ -67,7 +67,7 @@ export const translations = {
     about: {
       tag: "My Vision",
       title: "Driving Change Through Tax Expertise",
-      description: "I founded tax&purpose out of my deep-rooted desire to rethink tax consulting for purpose-driven entrepreneurs. With my 30 years of international tax expertise, I am familiar with classic national and international tax structures, tax optimization strategies, and their limitations. I create sustainable structures with substance and purpose.",
+      description: "I founded tax&purpose out of my deep-rooted desire to rethink tax consulting for purpose-driven entrepreneurs. With my 30 years of international tax expertise, I am familiar with classic national and international tax structures, tax optimization strategies, and their limitations. I create sustainable structures with substance and\u00A0purpose.",
       imageAlt1: "Dr. Leila Momen in a professional setting",
       imageAlt2: "Dr. Leila Momen outdoors",
       valueProposition: {
@@ -459,7 +459,7 @@ export const translations = {
     nav: {
       home: "Home",
       services: "Leistungen",
-      about: "Über Mich",
+      about: "Über mich",
       partners: "Partner",
       contact: "Kontakt",
       schedule: "Gespräch vereinbaren",

@@ -648,6 +648,39 @@ function App() {
                 <Logo />
               </Link>
 
+              {/* Mobile language switcher (left of hamburger) */}
+              <div className="flex items-center lg:hidden">
+                <button
+                  onClick={() => setLang(lang === 'en' ? 'de' : 'en')}
+                  className="mr-2 text-sm font-medium text-text hover:text-accent transition-colors duration-300 flex items-center gap-2 px-3 py-2 rounded-full border border-accent/20 bg-white shadow-sm"
+                  aria-label="Switch language"
+                >
+                  {lang === 'de' ? (
+                    <>
+                      <span className="inline-block w-[20px] h-[14px] rounded overflow-hidden border border-gray-200">
+                        <img src="https://flagcdn.com/de.svg" alt="German flag" style={{ width: '20px', height: '14px', display: 'block' }} />
+                      </span>
+                      DE
+                    </>
+                  ) : (
+                    <>
+                      <span className="inline-block w-[20px] h-[14px] rounded overflow-hidden border border-gray-200">
+                        <img src="https://flagcdn.com/gb.svg" alt="United Kingdom flag" style={{ width: '20px', height: '14px', display: 'block' }} />
+                      </span>
+                      EN
+                    </>
+                  )}
+                </button>
+                <button
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  className="rounded-full p-2 text-text hover:bg-accent/10"
+                  aria-label="Open menu"
+                >
+                  {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                </button>
+              </div>
+
+              {/* Desktop nav and language switcher */}
               <div className="hidden lg:flex lg:items-center lg:gap-8">
                 <nav className="flex gap-16">
                   {navigation.map((item) => (
@@ -688,15 +721,15 @@ function App() {
                 >
                   {lang === 'de' ? (
                     <>
-                      <span className="w-5 h-5 rounded-full overflow-hidden">
-                        <img src="https://flagcdn.com/de.svg" alt="German flag" className="w-full h-full object-cover" />
+                      <span className="inline-block w-[20px] h-[14px] rounded overflow-hidden border border-gray-200">
+                        <img src="https://flagcdn.com/de.svg" alt="German flag" style={{ width: '20px', height: '14px', display: 'block' }} />
                       </span>
                       DE
                     </>
                   ) : (
                     <>
-                      <span className="w-5 h-5 rounded-full overflow-hidden">
-                        <img src="https://flagcdn.com/gb.svg" alt="United Kingdom flag" className="w-full h-full object-cover" />
+                      <span className="inline-block w-[20px] h-[14px] rounded overflow-hidden border border-gray-200">
+                        <img src="https://flagcdn.com/gb.svg" alt="United Kingdom flag" style={{ width: '20px', height: '14px', display: 'block' }} />
                       </span>
                       EN
                     </>
@@ -704,17 +737,19 @@ function App() {
                 </button>
               </div>
 
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="lg:hidden rounded-full p-2 text-text hover:bg-accent/10"
-              >
-                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-              </button>
-
+              {/* Remove language switcher from inside mobile menu */}
               {isMenuOpen && (
                 <div className="lg:hidden fixed inset-0 z-40 bg-black/20 backdrop-blur-sm transition-opacity duration-300">
                   <div className="absolute top-24 left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-[#e4bfbf]/10 shadow-lg max-h-[80vh] overflow-y-auto transform transition-transform duration-300">
-                    <div className="p-6 space-y-4">
+                    {/* Close button at the top right */}
+                    <button
+                      onClick={() => setIsMenuOpen(false)}
+                      className="absolute top-4 right-4 p-2 rounded-full text-text hover:bg-accent/10 z-50"
+                      aria-label="Close menu"
+                    >
+                      <X className="h-6 w-6" />
+                    </button>
+                    <div className="p-6 space-y-4 pt-12">
                       {navigation.map((item) => (
                          item.href.startsWith('/') ? (
                             <Link
