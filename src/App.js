@@ -155,7 +155,7 @@ const HomePageContent = ({ t, lang, services, currentTestimonials, insightImages
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4 text-text">
               {t.about.title}
             </h2>
-            <p className="text-lg text-text/90 max-w-2xl mx-auto">
+            <p className="text-lg text-text/90 max-w-3xl mx-auto">
               {t.about.description}
             </p>
           </div>
@@ -657,14 +657,14 @@ function App() {
                 >
                   {lang === 'de' ? (
                     <>
-                      <span className="inline-block w-[20px] h-[14px] rounded overflow-hidden border border-gray-200">
+                      <span className="inline-block w-[20px] h-[14px]">
                         <img src="https://flagcdn.com/de.svg" alt="German flag" style={{ width: '20px', height: '14px', display: 'block' }} />
                       </span>
                       DE
                     </>
                   ) : (
                     <>
-                      <span className="inline-block w-[20px] h-[14px] rounded overflow-hidden border border-gray-200">
+                      <span className="inline-block w-[20px] h-[14px]">
                         <img src="https://flagcdn.com/gb.svg" alt="United Kingdom flag" style={{ width: '20px', height: '14px', display: 'block' }} />
                       </span>
                       EN
@@ -721,14 +721,14 @@ function App() {
                 >
                   {lang === 'de' ? (
                     <>
-                      <span className="inline-block w-[20px] h-[14px] rounded overflow-hidden border border-gray-200">
+                      <span className="inline-block w-[20px] h-[14px]">
                         <img src="https://flagcdn.com/de.svg" alt="German flag" style={{ width: '20px', height: '14px', display: 'block' }} />
                       </span>
                       DE
                     </>
                   ) : (
                     <>
-                      <span className="inline-block w-[20px] h-[14px] rounded overflow-hidden border border-gray-200">
+                      <span className="inline-block w-[20px] h-[14px]">
                         <img src="https://flagcdn.com/gb.svg" alt="United Kingdom flag" style={{ width: '20px', height: '14px', display: 'block' }} />
                       </span>
                       EN
