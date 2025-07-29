@@ -432,8 +432,8 @@ const HomePageContent = ({ t, lang, services, currentTestimonials, insightImages
                     </div>
                     <div className="ml-3">
                       <p className="text-sm font-medium text-text">{t.contact.info.phone}</p>
-                      <a href="tel:+4915144508604" className="text-text/70 hover:text-accent transition-colors">
-                        +49 1514 4508604 
+                      <a href="tel:+4915755842279" className="text-text/70 hover:text-accent transition-colors">
+                       +49 1575 5842279
                       </a>
                     </div>
                   </li>
@@ -841,8 +841,8 @@ function App() {
                   <li>Jülicher Straße 72a</li>
                   <li>52070 Aachen</li>
                   <li>
-                    <a href="tel:+4915144508604" className="hover:text-primary transition-colors">
-                      +49 1514 4508604 
+                    <a href="tel:+4915755842279" className="hover:text-primary transition-colors">
+                      +49 1575 5842279
                     </a>
                   </li>
                   <li>
