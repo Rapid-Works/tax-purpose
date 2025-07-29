@@ -834,7 +834,7 @@ export const translations = {
         },
         {
           title: "2. Verantwortlicher",
-          content: "Verantwortlicher gemäß Art. 4 DSGVO:\ntax&purpose\nDr. Leila Momen\nJülicher Straße 72a\n52070 Aachen\nEmail: contact@taxandpurpose.de\nPhone: +49 151 44508604\n\nNote on the Data Protection Officer:\nAccording to § 38 BDSG (German Federal Data Protection Act), as a tax advisor in a sole proprietorship with fewer than 20 employees, there is no legal obligation for me to appoint a data protection officer."
+          content: "Verantwortlicher gemäß Art. 4 DSGVO:\ntax&purpose\nDr. Leila Momen\nJülicher Straße 72a\n52070 Aachen\nEmail: contact@taxandpurpose.de\nPhone: +49 1575 5842279\n\nNote on the Data Protection Officer:\nAccording to § 38 BDSG (German Federal Data Protection Act), as a tax advisor in a sole proprietorship with fewer than 20 employees, there is no legal obligation for me to appoint a data protection officer."
         },
         {
           title: "3. Datenverarbeitung auf der Website",
@@ -885,7 +885,7 @@ export const translations = {
       },
       contact: {
         title: "Contact:",
-        phone: "Phone: +49 1514 4508604",
+        phone: "Phone: +49 1575 5842279",
         email: "Email: leila.momen@taxandpurpose.com"
       },
       professionalInfo: {
