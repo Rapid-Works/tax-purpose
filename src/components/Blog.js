@@ -32,42 +32,7 @@ const Blog = ({ t, lang }) => {
     fetchPosts();
   }, [lang]);
 
-  // Placeholder posts for when there are no blog posts yet or API key not configured
-  const placeholderPosts = [
-    {
-      slug: 'sustainable-tax-planning',
-      title: lang === 'de' ? 'Nachhaltige Steuerplanung für Sozialunternehmen' : 'Sustainable Tax Planning for Social Enterprises',
-      summary: lang === 'de'
-        ? 'Erfahre, wie du als Sozialunternehmer steuerliche Vorteile nutzen und gleichzeitig gesellschaftliche Wirkung erzielen kannst.'
-        : 'Learn how social entrepreneurs can leverage tax benefits while creating societal impact.',
-      featured_image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800',
-      published: '2025-01-15',
-      tags: [{ name: lang === 'de' ? 'Steuerplanung' : 'Tax Planning' }]
-    },
-    {
-      slug: 'esg-tax-reporting',
-      title: lang === 'de' ? 'ESG und steuerliche Berichterstattung' : 'ESG and Tax Reporting',
-      summary: lang === 'de'
-        ? 'Die Bedeutung der steuerlichen Transparenz im Rahmen der Nachhaltigkeitsberichterstattung (CSRD).'
-        : 'The importance of tax transparency in sustainability reporting (CSRD).',
-      featured_image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800',
-      published: '2025-01-10',
-      tags: [{ name: 'ESG' }]
-    },
-    {
-      slug: 'steward-ownership-tax',
-      title: lang === 'de' ? 'Verantwortungseigentum: Steuerliche Aspekte' : 'Steward Ownership: Tax Considerations',
-      summary: lang === 'de'
-        ? 'Ein Überblick über die steuerlichen Implikationen von Verantwortungseigentum und Purpose-Unternehmen.'
-        : 'An overview of the tax implications of steward ownership and purpose-driven companies.',
-      featured_image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800',
-      published: '2025-01-05',
-      tags: [{ name: lang === 'de' ? 'Verantwortungseigentum' : 'Steward Ownership' }]
-    }
-  ];
-
-  const displayPosts = posts.length > 0 ? posts : placeholderPosts;
-  const isPlaceholder = posts.length === 0 && !loading;
+  const displayPosts = posts;
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -160,7 +125,7 @@ const Blog = ({ t, lang }) => {
 
                   {/* Read More Link */}
                   <a
-                    href={isPlaceholder ? '#contact' : `/blog/${post.slug}`}
+                    href={`/blog/${post.slug}`}
                     className="inline-flex items-center gap-2 text-accent font-medium text-sm group/link"
                   >
                     {lang === 'de' ? 'Weiterlesen' : 'Read more'}
@@ -170,15 +135,6 @@ const Blog = ({ t, lang }) => {
               </article>
             ))}
           </div>
-        )}
-
-        {/* Placeholder notice */}
-        {isPlaceholder && !error && (
-          <p className="text-center text-text/60 text-sm mt-8 italic">
-            {lang === 'de'
-              ? 'Blog-Beiträge werden demnächst verfügbar sein. Kontaktiere mich für aktuelle Einblicke!'
-              : 'Blog posts coming soon. Contact me for the latest insights!'}
-          </p>
         )}
 
         {/* View All Button - only show if there are actual posts */}
