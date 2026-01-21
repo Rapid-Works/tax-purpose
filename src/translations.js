@@ -4,6 +4,7 @@ export const translations = {
       home: "Home",
       services: "Services",
       about: "About me",
+      blog: "Blog",
       partners: "Partners",
       contact: "Contact",
       schedule: "Schedule Consultation",
@@ -118,6 +119,11 @@ export const translations = {
         savings: { number: "500+", label: "Projects & Special Topics (incl. Social & Sustainable)" },
         statsDescription: "These figures reflect the experience I have gained over many years in my corporate and consulting work, which I now bring to tax & purpose."
       }
+    },
+    blog: {
+      tag: "Blog",
+      title: "Latest Insights",
+      description: "Learn more about sustainable tax strategies and current developments in the purpose economy."
     },
     testimonials: {
       tag: "Testimonials",
@@ -460,6 +466,7 @@ export const translations = {
       home: "Home",
       services: "Leistungen",
       about: "Über mich",
+      blog: "Blog",
       partners: "Partner",
       contact: "Kontakt",
       schedule: "Gespräch vereinbaren",
@@ -574,6 +581,11 @@ export const translations = {
         savings: { number: "500+", label: "Projekte und Spezialthemen inkl. sozialer und nachhaltiger Projekte" },
         statsDescription: "Diese Zahlen spiegeln meine Erfahrung wider, die ich über viele Jahre in meiner Konzern- und Beratungstätigkeit gesammelt habe und nun in tax & purpose einbringe."
       }
+    },
+    blog: {
+      tag: "Blog",
+      title: "Aktuelle Einblicke",
+      description: "Erfahre mehr über nachhaltige Steuerstrategien und aktuelle Entwicklungen im Bereich Purpose Economy."
     },
     testimonials: {
       tag: "Stimmen unserer Partner",

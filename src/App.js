@@ -14,6 +14,9 @@ import PrivacyPolicy from "./components/PrivacyPolicy"
 import Impressum from "./components/Impressum"
 import ScrollToTop from "./components/ScrollToTop"
 import Logo from "./components/Logo"
+import Blog from "./components/Blog"
+import BlogPost from "./components/BlogPost"
+import BlogList from "./components/BlogList"
 
 console.log('Image path:', bigFourImage);
 
@@ -26,7 +29,7 @@ const colors = {
 };
 
 // Component for the main page content
-const HomePageContent = ({ t, lang, services, currentTestimonials, insightImages }) => {
+const HomePageContent = ({ t, lang, services, currentTestimonials }) => {
   const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
 
   return (
@@ -256,6 +259,9 @@ const HomePageContent = ({ t, lang, services, currentTestimonials, insightImages
           )}
         </div>
       </section>
+
+      {/* Blog Section */}
+      <Blog t={t} lang={lang} />
 
       {/* Testimonials Section */}
       <section id="testimonials" className="pt-12 pb-24 relative bg-background">
@@ -564,6 +570,7 @@ function App() {
     { name: "Home", href: "/" },
     { name: "Services", href: "/#services" },
     { name: "About", href: "/#about" },
+    { name: "Blog", href: "/#blog" },
     { name: "References", href: "/#testimonials" },
     { name: "Contact", href: "/#contact" },
   ]
@@ -799,12 +806,13 @@ function App() {
                   lang={lang}
                   services={services}
                   currentTestimonials={currentTestimonials}
-                  insightImages={insightImages}
                 />
               }
             />
             <Route path="/privacy-policy" element={<PrivacyPolicy t={t} />} />
             <Route path="/imprint" element={<Impressum t={t} />} />
+            <Route path="/blog/:slug" element={<BlogPost t={t} lang={lang} />} />
+            <Route path="/blog" element={<BlogList t={t} lang={lang} />} />
           </Routes>
         </main>
 
