@@ -2,9 +2,10 @@
 
 import { useState, useEffect, useRef } from "react"
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { Menu, X, Leaf, Users, Globe, Linkedin, ChevronRight, Check, ChevronDown, BookOpen, ArrowUpRight } from "lucide-react"
+import { Menu, X, Leaf, Users, Globe, Linkedin, Check, ChevronDown, BookOpen, ArrowUpRight } from "lucide-react"
 import bigFourImage from './images/big4.png'
 import leilaHeroImage from './images/leila1.jpeg'
+// eslint-disable-next-line no-unused-vars
 import leilaLogo from './images/leilalogo.png'
 import leilaLogoWhite from './images/leilalogo_filled_white.png'
 import leilaAbout1 from './images/leila2.jpeg'
@@ -20,6 +21,7 @@ import BlogList from "./components/BlogList"
 
 console.log('Image path:', bigFourImage);
 
+// eslint-disable-next-line no-unused-vars
 const colors = {
   background: "#f9e9ea",
   text: "#393639",
@@ -596,6 +598,7 @@ function App() {
     },
   ]
 
+  // eslint-disable-next-line no-unused-vars
   const insightImages = {
     sustainable: "https://images.unsplash.com/photo-1618044733300-9472054094ee",
     crossBorder: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e",
