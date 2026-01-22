@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import Butter from 'buttercms';
-import { ArrowLeft, Calendar, User } from 'lucide-react';
+import { client } from '../sanity/client';
+import imageUrlBuilder from '@sanity/image-url';
+import { PortableText } from '@portabletext/react';
+import { ArrowLeft, Calendar } from 'lucide-react';
 
-const butter = Butter(process.env.REACT_APP_BUTTER_CMS_API_KEY || 'your_api_key_here');
+const builder = imageUrlBuilder(client);
+const urlFor = (source) => builder.image(source);
 
 const BlogPost = ({ t, lang }) => {
   const { slug } = useParams();
@@ -15,8 +18,16 @@ const BlogPost = ({ t, lang }) => {
     const fetchPost = async () => {
       try {
         setLoading(true);
-        const response = await butter.post.retrieve(slug);
-        setPost(response?.data?.data || null);
+        const query = `*[_type == "post" && slug.current == $slug][0] {
+          _id,
+          title,
+          slug,
+          publishedAt,
+          image,
+          body
+        }`;
+        const result = await client.fetch(query, { slug });
+        setPost(result || null);
         setError(null);
       } catch (err) {
         console.error('Error fetching blog post:', err);
@@ -76,11 +87,11 @@ const BlogPost = ({ t, lang }) => {
   return (
     <article className="min-h-screen bg-background">
       {/* Hero Section with Featured Image */}
-      {post.featured_image && (
+      {post.image && (
         <div className="relative h-[40vh] md:h-[50vh] overflow-hidden">
           <img
-            src={post.featured_image}
-            alt={post.featured_image_alt || post.title}
+            src={urlFor(post.image).width(1200).url()}
+            alt={post.title}
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent"></div>
@@ -98,20 +109,6 @@ const BlogPost = ({ t, lang }) => {
           {lang === 'de' ? 'Zurück zum Blog' : 'Back to Blog'}
         </Link>
 
-        {/* Tags */}
-        {post.tags && post.tags.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-4">
-            {post.tags.map((tag, i) => (
-              <span
-                key={i}
-                className="px-3 py-1 text-sm font-medium bg-accent/10 text-accent rounded-full"
-              >
-                {tag.name}
-              </span>
-            ))}
-          </div>
-        )}
-
         {/* Title */}
         <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-text font-serif mb-6">
           {post.title}
@@ -121,14 +118,8 @@ const BlogPost = ({ t, lang }) => {
         <div className="flex flex-wrap items-center gap-4 text-text/60 mb-8 pb-8 border-b border-primary/20">
           <span className="flex items-center gap-2">
             <Calendar className="w-4 h-4" />
-            {formatDate(post.published)}
+            {formatDate(post.publishedAt)}
           </span>
-          {post.author && (
-            <span className="flex items-center gap-2">
-              <User className="w-4 h-4" />
-              {post.author.first_name} {post.author.last_name}
-            </span>
-          )}
         </div>
 
         {/* Body Content */}
@@ -143,8 +134,9 @@ const BlogPost = ({ t, lang }) => {
             prose-blockquote:border-l-accent prose-blockquote:text-text/70 prose-blockquote:italic
             prose-img:rounded-xl prose-img:shadow-lg
             prose-figcaption:text-text/60 prose-figcaption:text-center"
-          dangerouslySetInnerHTML={{ __html: post.body }}
-        />
+        >
+          {Array.isArray(post.body) && <PortableText value={post.body} />}
+        </div>
 
         {/* Bottom Navigation */}
         <div className="mt-12 pt-8 border-t border-primary/20">

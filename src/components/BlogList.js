@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Butter from 'buttercms';
+import { client } from '../sanity/client';
+import imageUrlBuilder from '@sanity/image-url';
 import { ArrowRight, Calendar, ArrowLeft } from 'lucide-react';
 
-const butter = Butter(process.env.REACT_APP_BUTTER_CMS_API_KEY || 'your_api_key_here');
+const builder = imageUrlBuilder(client);
+const urlFor = (source) => builder.image(source);
 
 const BlogList = ({ t, lang }) => {
   const [posts, setPosts] = useState([]);
@@ -11,17 +13,30 @@ const BlogList = ({ t, lang }) => {
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
+  const pageSize = 9;
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         setLoading(true);
-        const response = await butter.post.list({
-          page: page,
-          page_size: 9
-        });
-        setPosts(response?.data?.data || []);
-        setHasMore(response?.data?.meta?.next_page !== null);
+        const start = (page - 1) * pageSize;
+        const end = start + pageSize;
+
+        const query = `{
+          "posts": *[_type == "post"] | order(publishedAt desc)[$start...$end] {
+            _id,
+            title,
+            slug,
+            publishedAt,
+            image,
+            "summary": array::join(string::split((pt::text(body)), "")[0...150], "") + "..."
+          },
+          "total": count(*[_type == "post"])
+        }`;
+
+        const result = await client.fetch(query, { start, end });
+        setPosts(result.posts || []);
+        setHasMore(result.total > end);
         setError(null);
       } catch (err) {
         console.error('Error fetching blog posts:', err);
@@ -103,31 +118,17 @@ const BlogList = ({ t, lang }) => {
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {posts.map((post, index) => (
               <article
-                key={post.slug || index}
+                key={post._id || index}
                 className="group relative bg-white rounded-2xl overflow-hidden border border-primary/10 hover:border-accent/20 hover:shadow-xl transition-all duration-500"
               >
                 {/* Image */}
                 <div className="relative h-48 overflow-hidden">
                   <img
-                    src={post.featured_image || 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800'}
+                    src={post.image ? urlFor(post.image).width(800).url() : 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800'}
                     alt={post.title}
                     className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-
-                  {/* Tags */}
-                  {post.tags && post.tags.length > 0 && (
-                    <div className="absolute top-4 left-4 flex flex-wrap gap-2">
-                      {post.tags.slice(0, 2).map((tag, i) => (
-                        <span
-                          key={i}
-                          className="px-2 py-1 text-xs font-medium bg-white/90 backdrop-blur-sm text-accent rounded-full"
-                        >
-                          {tag.name}
-                        </span>
-                      ))}
-                    </div>
-                  )}
                 </div>
 
                 {/* Content */}
@@ -136,7 +137,7 @@ const BlogList = ({ t, lang }) => {
                   <div className="flex items-center gap-4 text-sm text-text/60 mb-3">
                     <span className="flex items-center gap-1">
                       <Calendar className="w-4 h-4" />
-                      {formatDate(post.published)}
+                      {formatDate(post.publishedAt)}
                     </span>
                   </div>
 
@@ -147,12 +148,12 @@ const BlogList = ({ t, lang }) => {
 
                   {/* Summary */}
                   <p className="text-text/70 text-sm line-clamp-3 mb-4">
-                    {post.summary || post.meta_description}
+                    {post.summary}
                   </p>
 
                   {/* Read More Link */}
                   <Link
-                    to={`/blog/${post.slug}`}
+                    to={`/blog/${post.slug.current}`}
                     className="inline-flex items-center gap-2 text-accent font-medium text-sm group/link"
                   >
                     {lang === 'de' ? 'Weiterlesen' : 'Read more'}
