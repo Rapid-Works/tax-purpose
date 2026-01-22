@@ -8,7 +8,6 @@ const butter = Butter(process.env.REACT_APP_BUTTER_CMS_API_KEY || 'your_api_key_
 const Blog = ({ t, lang }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -19,10 +18,8 @@ const Blog = ({ t, lang }) => {
           page_size: 3
         });
         setPosts(response?.data?.data || []);
-        setError(null);
       } catch (err) {
         console.error('Error fetching blog posts:', err);
-        setError(err);
         setPosts([]);
       } finally {
         setLoading(false);
