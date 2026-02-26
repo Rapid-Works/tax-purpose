@@ -363,15 +363,15 @@ export const translations = {
     },
     privacyPolicy: {
       title: "Privacy Policy for taxandpurpose.de",
-      lastUpdated: "Last Updated: 27 May 2025",
+      lastUpdated: "Last Updated: 26 February 2026",
       sections: [
         {
           title: "1. Introduction",
-          content: "I am pleased about your interest in my website https://www.taxandpurpose.de.\nThe protection of your personal data is particularly important to me. Below, I inform you according to Art. 13 GDPR about the processing of your data."
+          content: "I am pleased about your interest in my website https://www.taxandpurpose.com. The protection of your personal data is particularly important to me. Below, I inform you according to Art. 13 GDPR about the processing of your data."
         },
         {
           title: "2. Controller",
-          content: "Controller according to Art. 4 GDPR:\ntax&purpose\nDr. Leila Momen\nJülicher Straße 72a\n52070 Aachen\nEmail: contact@taxandpurpose.de\nPhone: +49 151 44508604\n\nNote on the Data Protection Officer:\nAccording to § 38 BDSG (German Federal Data Protection Act), as a tax advisor in a sole proprietorship with fewer than 20 employees, there is no legal obligation for me to appoint a data protection officer."
+          content: "Controller according to Art. 4 GDPR:\ntax&purpose GmbH\nRepresented by Managing Director Dr. Leila Momen\nJülicher Straße 72a\n52070 Aachen\nEmail: contact@taxandpurpose.de\nPhone: +49 157 55842279\n\nNote on the Data Protection Officer:\nAccording to § 38 BDSG (German Federal Data Protection Act), as a tax advisor with fewer than 20 employees, there is no legal obligation for me to appoint a data protection officer."
         },
         {
           title: "3. Data Processing on the Website",
@@ -416,14 +416,27 @@ export const translations = {
     imprint: {
       title: "Imprint",
       provider: {
-        name: "tax&purpose",
+        name: "tax&purpose GmbH",
         person: "Dr. Leila Momen",
         address: "Jülicher Straße 72a\n52070 Aachen"
       },
+      representedBy: {
+        title: "Represented by:",
+        value: "Geschäftsführerin: Dr. Leila Momen"
+      },
+      registerEntry: {
+        title: "Register Entry:",
+        court: "Registergericht: Amtsgericht Aachen",
+        number: "Registernummer: HRB 29427"
+      },
+      vatId: {
+        title: "VAT ID:",
+        value: "Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz: DE460052838"
+      },
       contact: {
         title: "Contact:",
-        phone: "Phone: +49 1514 4508604",
-        email: "Email: leila.momen@taxandpurpose.com"
+        phone: "Phone: +49 157 55842279",
+        email: "Email: contact@taxandpurpose.de"
       },
       professionalInfo: {
         title: "Job title and professional regulations:",
@@ -838,15 +851,15 @@ export const translations = {
     },
     privacyPolicy: {
       title: "Datenschutzerklärung für taxandpurpose.de",
-      lastUpdated: "Stand: 27. Mai 2025",
+      lastUpdated: "Stand: 26. Februar 2026",
       sections: [
         {
           title: "1. Einleitung",
-          content: "Ich freue mich über Ihr Interesse an meiner Website https://www.taxandpurpose.de.\nDer Schutz Ihrer personenbezogenen Daten ist mir besonders wichtig. Nachfolgend informiere ich Sie gemäß Art. 13 DSGVO über die Verarbeitung Ihrer Daten."
+          content: "Ich freue mich über Ihr Interesse an meiner Website https://www.taxandpurpose.com. Der Schutz Ihrer personenbezogenen Daten ist mir besonders wichtig. Nachfolgend informiere ich Sie gemäß Art. 13 DSGVO über die Verarbeitung Ihrer Daten."
         },
         {
           title: "2. Verantwortlicher",
-          content: "Verantwortlicher gemäß Art. 4 DSGVO:\ntax&purpose\nDr. Leila Momen\nJülicher Straße 72a\n52070 Aachen\nEmail: contact@taxandpurpose.de\nPhone: +49 1575 5842279\n\nNote on the Data Protection Officer:\nAccording to § 38 BDSG (German Federal Data Protection Act), as a tax advisor in a sole proprietorship with fewer than 20 employees, there is no legal obligation for me to appoint a data protection officer."
+          content: "Verantwortlicher gemäß Art. 4 DSGVO:\ntax&purpose GmbH\nRepräsentiert durch die Geschäftsführerin Dr. Leila Momen\nJülicher Straße 72a\n52070 Aachen\nEmail: contact@taxandpurpose.de\nPhone: +49 1575 5842279\n\nHinweis zum Datenschutzbeauftragten:\nGemäß § 38 BDSG (Bundesdatenschutzgesetz) bin ich als Steuerberater mit weniger als 20 Mitarbeitern gesetzlich nicht verpflichtet, einen Datenschutzbeauftragten zu benennen."
         },
         {
           title: "3. Datenverarbeitung auf der Website",
@@ -891,14 +904,27 @@ export const translations = {
     imprint: {
       title: "Impressum",
       provider: {
-        name: "tax&purpose",
+        name: "tax&purpose GmbH",
         person: "Dr. Leila Momen",
         address: "Jülicher Straße 72a\n52070 Aachen"
       },
+      representedBy: {
+        title: "Vertreten durch:",
+        value: "Geschäftsführerin: Dr. Leila Momen"
+      },
+      registerEntry: {
+        title: "Registereintrag:",
+        court: "Registergericht: Amtsgericht Aachen",
+        number: "Registernummer: HRB 29427"
+      },
+      vatId: {
+        title: "Umsatzsteuer-ID:",
+        value: "Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz: DE460052838"
+      },
       contact: {
-        title: "Contact:",
-        phone: "Phone: +49 1575 5842279",
-        email: "Email: leila.momen@taxandpurpose.com"
+        title: "Kontakt:",
+        phone: "Telefon: +49 1575 5842279",
+        email: "E-Mail: contact@taxandpurpose.de"
       },
       professionalInfo: {
         title: "Berufsbezeichnung und berufsrechtliche Regelungen:",

@@ -3,14 +3,33 @@ import React from 'react';
 const PrivacyPolicy = ({ t }) => {
   const policy = t.privacyPolicy;
 
-  // Helper to render content with line breaks
+  // Helper to render content with line breaks and clickable links
   const renderContent = (content) => {
-    return content.split('\n').map((line, index) => (
-      <React.Fragment key={index}>
-        {line}
-        <br />
-      </React.Fragment>
-    ));
+    const urlRegex = /(https?:\/\/[^\s.,;:!?)]+)/g;
+
+    return content.split('\n').map((line, lineIndex) => {
+      const parts = line.split(urlRegex);
+      return (
+        <React.Fragment key={lineIndex}>
+          {parts.map((part, partIndex) =>
+            part.match(/^https?:\/\//) ? (
+              <a
+                key={partIndex}
+                href={part}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-accent hover:underline"
+              >
+                {part}
+              </a>
+            ) : (
+              part
+            )
+          )}
+          <br />
+        </React.Fragment>
+      );
+    });
   };
 
   return (

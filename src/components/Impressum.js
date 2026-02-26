@@ -51,6 +51,25 @@ const Impressum = ({ t }) => {
             <p>{renderSimpleContent(imprint.provider.address)}</p>
           </section>
 
+          {/* Represented By */}
+          <section>
+            <h2 className="text-xl font-semibold mb-2">{imprint.representedBy.title}</h2>
+            <p>{imprint.representedBy.value}</p>
+          </section>
+
+          {/* Register Entry */}
+          <section>
+            <h2 className="text-xl font-semibold mb-2">{imprint.registerEntry.title}</h2>
+            <p>{imprint.registerEntry.court}</p>
+            <p>{imprint.registerEntry.number}</p>
+          </section>
+
+          {/* VAT ID */}
+          <section>
+            <h2 className="text-xl font-semibold mb-2">{imprint.vatId.title}</h2>
+            <p>{imprint.vatId.value}</p>
+          </section>
+
           {/* Contact */}
           <section>
             <h2 className="text-xl font-semibold mb-2">{imprint.contact.title}</h2>
