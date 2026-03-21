@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getPostBySlug, getImageUrl } from '../directus/client';
+import { getPostBySlug } from '../directus/client';
 import { ArrowLeft, Calendar } from 'lucide-react';
 
 const BlogPost = ({ t, lang }) => {
@@ -73,8 +73,8 @@ const BlogPost = ({ t, lang }) => {
 
   return (
     <article className="min-h-screen bg-background">
-      {/* Hero Section with Featured Image */}
-      {post.featured_image && (
+      {/* Hero Section with Featured Image - hidden for now */}
+      {/* {post.featured_image && (
         <div className="relative h-[40vh] md:h-[50vh] overflow-hidden">
           <img
             src={getImageUrl(post.featured_image)}
@@ -83,7 +83,7 @@ const BlogPost = ({ t, lang }) => {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent"></div>
         </div>
-      )}
+      )} */}
 
       {/* Content */}
       <div className="relative mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12">
@@ -101,13 +101,15 @@ const BlogPost = ({ t, lang }) => {
           {post.title}
         </h1>
 
-        {/* Meta */}
-        <div className="flex flex-wrap items-center gap-4 text-text/60 mb-8 pb-8 border-b border-primary/20">
-          <span className="flex items-center gap-2">
-            <Calendar className="w-4 h-4" />
-            {formatDate(post.date_created)}
-          </span>
-        </div>
+        {/* Meta - only show if date is available */}
+        {post.date_created && (
+          <div className="flex flex-wrap items-center gap-4 text-text/60 mb-8 pb-8 border-b border-primary/20">
+            <span className="flex items-center gap-2">
+              <Calendar className="w-4 h-4" />
+              {formatDate(post.date_created)}
+            </span>
+          </div>
+        )}
 
         {/* Body Content */}
         {post.content && (
