@@ -486,11 +486,11 @@ export const translations = {
       references: "Referenzen"
     },
     hero: {
-      tag: "Steuerberatung für Unternehmen mit Impaktfokus",
+      tag: "Steuerberatung für Unternehmen mit Impactfokus",
       title: {
         line1: "Steuern & Purpose",
         line2: "im Einklang",
-        line3: "Du brauchst Steuerberatung, die dein Impakt Business versteht?",
+        line3: "Du brauchst Steuerberatung, die dein Impact Business versteht?",
       },
       description: "Ich bin Dr. Leila Momen. Mit meinen 30 Jahren internationaler Steuerexpertise und meiner Leidenschaft für soziales Unternehmertum und Nachhaltigkeit, unterstütze ich dich als Sinnunternehmer/in auf dem Weg zu steuerlicher Klarheit, damit deine Projekte gesellschaftliche Wirkung entfalten können.",
       cta: {

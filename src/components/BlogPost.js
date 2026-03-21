@@ -1,12 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { client } from '../sanity/client';
-import imageUrlBuilder from '@sanity/image-url';
-import { PortableText } from '@portabletext/react';
+import { getPostBySlug, getImageUrl } from '../directus/client';
 import { ArrowLeft, Calendar } from 'lucide-react';
-
-const builder = imageUrlBuilder(client);
-const urlFor = (source) => builder.image(source);
 
 const BlogPost = ({ t, lang }) => {
   const { slug } = useParams();
@@ -18,15 +13,7 @@ const BlogPost = ({ t, lang }) => {
     const fetchPost = async () => {
       try {
         setLoading(true);
-        const query = `*[_type == "post" && slug.current == $slug][0] {
-          _id,
-          title,
-          slug,
-          publishedAt,
-          image,
-          body
-        }`;
-        const result = await client.fetch(query, { slug });
+        const result = await getPostBySlug(slug);
         setPost(result || null);
         setError(null);
       } catch (err) {
@@ -87,10 +74,10 @@ const BlogPost = ({ t, lang }) => {
   return (
     <article className="min-h-screen bg-background">
       {/* Hero Section with Featured Image */}
-      {post.image && (
+      {post.featured_image && (
         <div className="relative h-[40vh] md:h-[50vh] overflow-hidden">
           <img
-            src={urlFor(post.image).width(1200).url()}
+            src={getImageUrl(post.featured_image)}
             alt={post.title}
             className="w-full h-full object-cover"
           />
@@ -118,25 +105,26 @@ const BlogPost = ({ t, lang }) => {
         <div className="flex flex-wrap items-center gap-4 text-text/60 mb-8 pb-8 border-b border-primary/20">
           <span className="flex items-center gap-2">
             <Calendar className="w-4 h-4" />
-            {formatDate(post.publishedAt)}
+            {formatDate(post.date_created)}
           </span>
         </div>
 
         {/* Body Content */}
-        <div
-          className="prose prose-lg max-w-none
-            prose-headings:text-text prose-headings:font-serif
-            prose-p:text-text/80 prose-p:leading-relaxed
-            prose-a:text-accent prose-a:no-underline hover:prose-a:underline
-            prose-strong:text-text
-            prose-ul:text-text/80 prose-ol:text-text/80
-            prose-li:marker:text-accent
-            prose-blockquote:border-l-accent prose-blockquote:text-text/70 prose-blockquote:italic
-            prose-img:rounded-xl prose-img:shadow-lg
-            prose-figcaption:text-text/60 prose-figcaption:text-center"
-        >
-          {Array.isArray(post.body) && <PortableText value={post.body} />}
-        </div>
+        {post.content && (
+          <div
+            className="prose prose-lg max-w-none
+              prose-headings:text-text prose-headings:font-serif
+              prose-p:text-text/80 prose-p:leading-relaxed
+              prose-a:text-accent prose-a:no-underline hover:prose-a:underline
+              prose-strong:text-text
+              prose-ul:text-text/80 prose-ol:text-text/80
+              prose-li:marker:text-accent
+              prose-blockquote:border-l-accent prose-blockquote:text-text/70 prose-blockquote:italic
+              prose-img:rounded-xl prose-img:shadow-lg
+              prose-figcaption:text-text/60 prose-figcaption:text-center"
+            dangerouslySetInnerHTML={{ __html: post.content }}
+          />
+        )}
 
         {/* Bottom Navigation */}
         <div className="mt-12 pt-8 border-t border-primary/20">

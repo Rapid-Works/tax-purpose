@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@directus/sdk": "^21.2.0",
     "@portabletext/react": "^4.0.3",
     "@sanity/client": "^6.29.1",
     "@sanity/image-url": "^1.2.0",
@@ -44,6 +45,7 @@
   "main": "index.js",
   "devDependencies": {
     "autoprefixer": "^10.4.20",
+    "mammoth": "^1.12.0",
     "postcss": "^8.5.2",
     "tailwindcss": "^3.4.17"
   },

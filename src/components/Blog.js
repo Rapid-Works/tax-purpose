@@ -1,11 +1,6 @@
 import { useState, useEffect } from 'react';
-import { client } from '../sanity/client';
-import imageUrlBuilder from '@sanity/image-url';
+import { getPosts, getImageUrl } from '../directus/client';
 import { ArrowRight, Calendar } from 'lucide-react';
-
-// Initialize image URL builder
-const builder = imageUrlBuilder(client);
-const urlFor = (source) => builder.image(source);
 
 const Blog = ({ t, lang }) => {
   const [posts, setPosts] = useState([]);
@@ -15,16 +10,7 @@ const Blog = ({ t, lang }) => {
     const fetchPosts = async () => {
       try {
         setLoading(true);
-        const query = `*[_type == "post"] | order(publishedAt desc)[0...3] {
-          _id,
-          title,
-          slug,
-          publishedAt,
-          image,
-          body,
-          "summary": array::join(string::split((pt::text(body)), "")[0...150], "") + "..."
-        }`;
-        const result = await client.fetch(query);
+        const result = await getPosts(3);
         setPosts(result || []);
       } catch (err) {
         console.error('Error fetching blog posts:', err);
@@ -81,31 +67,33 @@ const Blog = ({ t, lang }) => {
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {displayPosts.map((post, index) => (
               <article
-                key={post._id || index}
+                key={post.id || index}
                 className="group relative bg-white rounded-2xl overflow-hidden border border-primary/10 hover:border-accent/20 hover:shadow-xl transition-all duration-500"
               >
-                {/* Image */}
-                <div className="relative h-48 overflow-hidden">
+                {/* Image - hidden for now */}
+                {/* <div className="relative h-48 overflow-hidden">
                   <img
-                    src={post.image ? urlFor(post.image).width(800).url() : 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800'}
+                    src={post.featured_image ? getImageUrl(post.featured_image) : 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800'}
                     alt={post.title}
                     className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-                </div>
+                </div> */}
 
                 {/* Content */}
                 <div className="p-6">
-                  {/* Meta */}
-                  <div className="flex items-center gap-4 text-sm text-text/60 mb-3">
-                    <span className="flex items-center gap-1">
-                      <Calendar className="w-4 h-4" />
-                      {formatDate(post.publishedAt)}
-                    </span>
-                  </div>
+                  {/* Meta - only show if date is available */}
+                  {post.date_created && (
+                    <div className="flex items-center gap-4 text-sm text-text/60 mb-3">
+                      <span className="flex items-center gap-1">
+                        <Calendar className="w-4 h-4" />
+                        {formatDate(post.date_created)}
+                      </span>
+                    </div>
+                  )}
 
                   {/* Title */}
-                  <h3 className="text-xl font-semibold text-text group-hover:text-accent transition-colors duration-300 font-serif mb-3 line-clamp-2">
+                  <h3 className="text-xl font-semibold text-text group-hover:text-accent transition-colors duration-300 font-serif mb-3">
                     {post.title}
                   </h3>
 
@@ -116,7 +104,7 @@ const Blog = ({ t, lang }) => {
 
                   {/* Read More Link */}
                   <a
-                    href={`/blog/${post.slug.current}`}
+                    href={`/blog/${post.slug}`}
                     className="inline-flex items-center gap-2 text-accent font-medium text-sm group/link"
                   >
                     {lang === 'de' ? 'Weiterlesen' : 'Read more'}

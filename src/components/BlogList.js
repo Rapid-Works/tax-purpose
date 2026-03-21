@@ -1,11 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { client } from '../sanity/client';
-import imageUrlBuilder from '@sanity/image-url';
+import { getPostsPaginated, getImageUrl } from '../directus/client';
 import { ArrowRight, Calendar, ArrowLeft } from 'lucide-react';
-
-const builder = imageUrlBuilder(client);
-const urlFor = (source) => builder.image(source);
 
 const BlogList = ({ t, lang }) => {
   const [posts, setPosts] = useState([]);
@@ -19,24 +15,9 @@ const BlogList = ({ t, lang }) => {
     const fetchPosts = async () => {
       try {
         setLoading(true);
-        const start = (page - 1) * pageSize;
-        const end = start + pageSize;
-
-        const query = `{
-          "posts": *[_type == "post"] | order(publishedAt desc)[$start...$end] {
-            _id,
-            title,
-            slug,
-            publishedAt,
-            image,
-            "summary": array::join(string::split((pt::text(body)), "")[0...150], "") + "..."
-          },
-          "total": count(*[_type == "post"])
-        }`;
-
-        const result = await client.fetch(query, { start, end });
+        const result = await getPostsPaginated(page, pageSize);
         setPosts(result.posts || []);
-        setHasMore(result.total > end);
+        setHasMore(result.hasMore);
         setError(null);
       } catch (err) {
         console.error('Error fetching blog posts:', err);
@@ -118,13 +99,13 @@ const BlogList = ({ t, lang }) => {
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {posts.map((post, index) => (
               <article
-                key={post._id || index}
+                key={post.id || index}
                 className="group relative bg-white rounded-2xl overflow-hidden border border-primary/10 hover:border-accent/20 hover:shadow-xl transition-all duration-500"
               >
                 {/* Image */}
                 <div className="relative h-48 overflow-hidden">
                   <img
-                    src={post.image ? urlFor(post.image).width(800).url() : 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800'}
+                    src={post.featured_image ? getImageUrl(post.featured_image) : 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800'}
                     alt={post.title}
                     className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                   />
@@ -137,7 +118,7 @@ const BlogList = ({ t, lang }) => {
                   <div className="flex items-center gap-4 text-sm text-text/60 mb-3">
                     <span className="flex items-center gap-1">
                       <Calendar className="w-4 h-4" />
-                      {formatDate(post.publishedAt)}
+                      {formatDate(post.date_created)}
                     </span>
                   </div>
 
@@ -153,7 +134,7 @@ const BlogList = ({ t, lang }) => {
 
                   {/* Read More Link */}
                   <Link
-                    to={`/blog/${post.slug.current}`}
+                    to={`/blog/${post.slug}`}
                     className="inline-flex items-center gap-2 text-accent font-medium text-sm group/link"
                   >
                     {lang === 'de' ? 'Weiterlesen' : 'Read more'}
