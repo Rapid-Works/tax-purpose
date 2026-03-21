@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getPosts, getImageUrl } from '../directus/client';
+import { getPosts } from '../directus/client';
 import { ArrowRight, Calendar } from 'lucide-react';
 
 const Blog = ({ t, lang }) => {
