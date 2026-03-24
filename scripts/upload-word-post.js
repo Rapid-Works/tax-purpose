@@ -105,6 +105,58 @@ function fixDates(html) {
   return html.replace(/12\. März 2026/g, '19. März 2026');
 }
 
+// Post-process HTML to add proper heading tags
+// Since Word docs use non-standard styles, we detect headings by patterns
+function addHeadingTags(html, title) {
+  let result = html;
+
+  // Remove title repetition at the start (if content starts with the title)
+  const titlePattern = new RegExp(`^<p>${title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}</p>`, 'i');
+  result = result.replace(titlePattern, '');
+
+  // Convert strong-only paragraphs to h2 (likely section headings)
+  // Pattern: <p><strong>Text without period</strong></p>
+  result = result.replace(
+    /<p><strong>([^<]+)<\/strong><\/p>/g,
+    (match, text) => {
+      // Only convert if it looks like a heading (not too long, no period at end)
+      if (text.length < 150 && !text.trim().endsWith('.')) {
+        return `<h2>${text}</h2>`;
+      }
+      return match;
+    }
+  );
+
+  // Convert numbered section headings: "1. Title Text" at start of paragraph
+  result = result.replace(
+    /<p>(\d+)\.\s+([A-ZÄÖÜ][^<]{10,100})<\/p>/g,
+    '<h3>$1. $2</h3>'
+  );
+
+  // Convert known heading patterns to h2
+  const h2Patterns = [
+    /^Warum .{10,80}$/,
+    /^Was ist .{10,80}\??$/,
+    /^Wie .{10,80}$/,
+    /^Die .{10,80}$/,
+    /^Der .{10,80}$/,
+    /^Fazit:.{0,80}$/,
+    /^Zusammenfassung.{0,50}$/,
+    /.{5,50} – .{5,50}$/,  // Title patterns with em-dash
+  ];
+
+  // Find standalone short paragraphs that match heading patterns
+  result = result.replace(/<p>([^<]{15,120})<\/p>/g, (match, text) => {
+    const trimmed = text.trim();
+    if (h2Patterns.some(p => p.test(trimmed))) {
+      return `<h2>${trimmed}</h2>`;
+    }
+    return match;
+  });
+
+  return result.trim();
+}
+
 async function apiRequest(endpoint, method = 'GET', body = null) {
   const options = { method, headers };
   if (body) options.body = JSON.stringify(body);
@@ -137,8 +189,38 @@ async function convertAndUpload(options) {
 
   console.log(`\nConverting: ${filePath}`);
 
-  // Convert Word to HTML
-  const result = await mammoth.convertToHtml({ path: filePath });
+  // Style map for converting Word styles to HTML
+  const styleMap = [
+    // Standard Word styles
+    "p[style-name='Heading 1'] => h1:fresh",
+    "p[style-name='Heading 2'] => h2:fresh",
+    "p[style-name='Heading 3'] => h3:fresh",
+    "p[style-name='Heading 4'] => h4:fresh",
+    "p[style-name='Title'] => h1:fresh",
+    "p[style-name='Subtitle'] => h2:fresh",
+    "r[style-name='Strong'] => strong",
+    "r[style-name='Emphasis'] => em",
+    // Custom Md* styles (from markdown-converted Word docs)
+    "p[style-name='MdHeading1'] => h1:fresh",
+    "p[style-name='MdHeading2'] => h2:fresh",
+    "p[style-name='MdHeading3'] => h3:fresh",
+    "p[style-name='MdHeading4'] => h4:fresh",
+    "p[style-name='MdHeading5'] => h5:fresh",
+    "p[style-name='MdHeading6'] => h6:fresh",
+    "r[style-name='MdStrong'] => strong",
+    "r[style-name='MdEm'] => em",
+    // German heading styles
+    "p[style-name='Überschrift 1'] => h1:fresh",
+    "p[style-name='Überschrift 2'] => h2:fresh",
+    "p[style-name='Überschrift 3'] => h3:fresh",
+    "p[style-name='Überschrift 4'] => h4:fresh"
+  ];
+
+  // Convert Word to HTML with style mapping
+  const result = await mammoth.convertToHtml({
+    path: filePath,
+    styleMap: styleMap
+  });
   let html = result.value;
 
   // Log any conversion warnings
@@ -159,9 +241,10 @@ async function convertAndUpload(options) {
   const summary = extractSummary(html);
   console.log(`Summary: ${summary.substring(0, 50)}...`);
 
-  // Remove first h1 from content (it's now the title) and fix dates
+  // Remove first h1 from content (it's now the title), fix dates, and add heading tags
   let content = removeFirstH1(html);
   content = fixDates(content);
+  content = addHeadingTags(content, title);
 
   // Get client ID
   const clientId = await getClientId(clientSlug);

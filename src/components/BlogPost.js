@@ -116,14 +116,16 @@ const BlogPost = ({ t, lang }) => {
           <div
             className="prose prose-lg max-w-none
               prose-headings:text-text prose-headings:font-serif
-              prose-p:text-text/80 prose-p:leading-relaxed
+              prose-h2:mt-10 prose-h2:mb-4 prose-h3:mt-8 prose-h3:mb-3
+              prose-p:text-text/80 prose-p:leading-relaxed prose-p:mb-4
               prose-a:text-accent prose-a:no-underline hover:prose-a:underline
               prose-strong:text-text
-              prose-ul:text-text/80 prose-ol:text-text/80
-              prose-li:marker:text-accent
+              prose-ul:text-text/80 prose-ul:my-4 prose-ol:text-text/80 prose-ol:my-4
+              prose-li:marker:text-accent prose-li:mb-2
               prose-blockquote:border-l-accent prose-blockquote:text-text/70 prose-blockquote:italic
               prose-img:rounded-xl prose-img:shadow-lg
-              prose-figcaption:text-text/60 prose-figcaption:text-center"
+              prose-figcaption:text-text/60 prose-figcaption:text-center
+              prose-table:my-6"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
         )}

@@ -19,7 +19,7 @@ export async function getPosts(limit = 10) {
           status: { _eq: 'published' },
           client: { slug: { _eq: clientSlug } }
         },
-        fields: ['id', 'slug', 'title', 'summary', 'featured_image', 'status']
+        fields: ['id', 'slug', 'title', 'summary', 'featured_image', 'status', 'date_created']
       })
     );
     return posts;
@@ -43,7 +43,7 @@ export async function getPostsPaginated(page = 1, pageSize = 9) {
           status: { _eq: 'published' },
           client: { slug: { _eq: clientSlug } }
         },
-        fields: ['id', 'slug', 'title', 'summary', 'featured_image', 'status']
+        fields: ['id', 'slug', 'title', 'summary', 'featured_image', 'status', 'date_created']
       })
     );
 

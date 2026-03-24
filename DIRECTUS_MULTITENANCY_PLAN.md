@@ -306,9 +306,10 @@ The shared `DIRECTUS_TOKEN` works for all clients - filtering is done by `CLIENT
   - [x] "Tax & Purpose Editor" role created
   - [x] Editor permissions configured (filtered by client)
   - [x] editor@taxandpurpose.de user created
-- [ ] Phase 3: Testing
-  - [ ] Manual step: Link policy to role in admin panel (if needed)
-  - [ ] Test editor login and post creation
+- [x] Phase 3: Testing
+  - [x] Manual step: Link policy to role in admin panel
+  - [x] Test editor login and post creation
+  - [x] Test tenant created for multi-tenancy verification
 
 ---
 
@@ -328,18 +329,67 @@ All setup completed via API (`scripts/setup-directus.js`).
 | Editor policy with permissions | ✅ Created |
 | editor@taxandpurpose.de | ✅ Created (password: TaxPurpose2026) |
 
-### Possible Manual Step
+### Editor Setup (Completed)
 
-If the editor user cannot access posts, you may need to link the policy to the role:
+The editor role requires:
+1. **App Access** enabled on the policy (allows admin panel login)
+2. **Permissions** for posts and clients collections
+3. **Role-Policy link** (must be done in admin UI - API has security restrictions)
 
-1. Go to **Settings → Roles → Tax & Purpose Editor**
-2. Under "Policies", add "Tax & Purpose Editor Policy"
-3. Save
+**Setup via Admin Panel:**
+1. Go to **Settings → Access Policies → Tax & Purpose Editor Policy**
+2. Enable "App Access" checkbox
+3. In "Roles" field, add "Tax & Purpose Editor"
+4. Save
+
+**Permissions added via API:**
+- posts: read, update, create
+- clients: read
 
 ### Test Login
 
-- **Admin**: admin@rapid-works.io
-- **Editor**: editor@taxandpurpose.de / TaxPurpose2026
+- **Admin**: admin@rapid-works.io / RapidWorks2026
+- **Tax & Purpose Editor**: editor@taxandpurpose.de / TaxPurpose2026
+- **Test Tenant Editor**: editor@test-tenant.com / TestTenant2026
+
+---
+
+## Test Tenant (Multi-Tenancy Verification)
+
+A test tenant has been created to verify data isolation between clients.
+
+### Test Tenant Resources
+
+| Resource | ID | Description |
+|----------|-----|-------------|
+| Client | 2 | Test Tenant (slug: test-tenant) |
+| Role | f23b0b07-cfe4-4729-a38e-0ec817cba599 | Test Tenant Editor |
+| Policy | 5db6836e-5c8a-4034-9a26-fdf93f538f3a | Test Tenant Editor Policy |
+| User | bf7c951a-f4ed-48ba-923d-3ff1571d78f7 | editor@test-tenant.com |
+
+### Test Tenant Permissions
+
+| Collection | Action | Filter |
+|------------|--------|--------|
+| posts | read | client = 2 |
+| posts | update | client = 2 |
+| posts | create | preset: client = 2 |
+| clients | read | id = 2 |
+
+### Manual Setup Required
+
+**Link policy to role in Directus admin:**
+1. Go to **Settings → Roles → Test Tenant Editor**
+2. In the **Policies** section, click **Add Existing**
+3. Select **"Test Tenant Editor Policy"**
+4. Save
+
+### Verification
+
+After linking the policy to the role, login as `editor@test-tenant.com`:
+- ✅ Should see Posts collection (but 0 posts - Test Tenant has no posts)
+- ✅ Should see Clients collection (only Test Tenant visible)
+- ✅ Should NOT see any Tax & Purpose posts (client_id=1)
 
 ---
 
@@ -348,9 +398,10 @@ If the editor user cannot access posts, you may need to link the policy to the r
 ### Directus 10+ API Changes
 
 1. **Policies required for permissions**: Permissions must be attached to policies, not directly to roles
-2. **Role → Policy linking**: May need to be done manually in admin panel (API permission restrictions)
-3. **ID types**: Directus uses integer IDs by default, not UUIDs
-4. **Empty DELETE responses**: API returns empty body on DELETE, handle in code
+2. **Role → Policy linking**: Must be done in admin UI - API returns "FORBIDDEN" even for admin users (security feature)
+3. **Policy field updates**: Some fields (like `app_access`) can be updated via API, but role assignments cannot
+4. **ID types**: Directus uses integer IDs by default, not UUIDs
+5. **Empty DELETE responses**: API returns empty body on DELETE, handle in code
 
 ### Key Technical Decisions
 
@@ -371,7 +422,7 @@ If the editor user cannot access posts, you may need to link the policy to the r
 | `src/components/BlogPost.js` | Single post view |
 | `.env` | Directus URL, token, client slug |
 | `scripts/setup-directus.js` | Automated Directus setup |
-| `scripts/upload-word-post.js` | Convert Word docs to blog posts |
+| `scripts/upload-word-v3.js` | Convert Word docs to blog posts (recommended) |
 
 ### Reusable Setup Script
 
@@ -387,53 +438,58 @@ This deletes and recreates collections, adds Tax & Purpose client, and creates r
 
 ## Uploading Blog Posts from Word Documents
 
-Convert `.docx` files directly to Directus blog posts.
+Convert `.docx` files directly to Directus blog posts using `upload-word-v3.js`.
+
+**Prerequisites:** Add admin credentials to `.env`:
+```
+DIRECTUS_ADMIN_EMAIL=admin@rapid-works.io
+DIRECTUS_ADMIN_PASSWORD=your_password
+```
 
 ### Quick Usage
 
 ```bash
-# Basic upload (creates as draft)
-DIRECTUS_ADMIN_TOKEN=your_token node scripts/upload-word-post.js path/to/article.docx
+# Upload a single document
+node scripts/upload-word-v3.js path/to/article.docx
 
-# With custom options
-DIRECTUS_ADMIN_TOKEN=your_token node scripts/upload-word-post.js article.docx \
-  --title "My Custom Title" \
-  --slug "my-custom-slug" \
-  --status "published" \
-  --client "tax-purpose"
+# Upload all documents in src/word_blogs/
+node scripts/upload-word-v3.js --all
+
+# Preview without uploading (dry run)
+node scripts/upload-word-v3.js --all --dry-run
 ```
 
 ### What the Script Does
 
-1. Converts Word document to clean HTML using mammoth.js
-2. Extracts title from first `<h1>` heading (or uses filename)
-3. Generates URL slug from title
-4. Extracts summary from first paragraph
-5. Creates post in Directus via API
+1. Auto-logins to Directus using credentials from `.env`
+2. Parses Word document XML to detect `MdHeading` styles
+3. Converts to proper HTML with h2/h3 heading tags
+4. Extracts title from filename
+5. Generates URL slug from title
+6. Creates post in Directus as published
 
 ### Options
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| `--title` | First H1 or filename | Post title |
-| `--slug` | Auto from title | URL slug |
-| `--status` | `draft` | `draft` or `published` |
-| `--client` | `tax-purpose` | Client slug |
+| Option | Description |
+|--------|-------------|
+| `--all` | Process all .docx files in `src/word_blogs/` |
+| `--dry-run` | Preview without uploading |
 
 ### Tips for Word Documents
 
-- **First heading**: Use H1 for the post title (will be extracted)
-- **First paragraph**: Used as the post summary
-- **Images**: Embedded images are converted to base64 (inline)
+- **Use MdHeading styles**: Word docs converted from Markdown have `MdHeading1`, `MdHeading2`, etc. styles which are automatically detected
+- **Title**: Extracted from filename (e.g., `Article_My_Title.docx` → "My Title")
 - **Formatting**: Bold, italic, lists, and tables are preserved
+- **Headings**: `MdHeading2` → `<h2>`, `MdHeading3` → `<h3>`
 
 ---
 
-## Uploaded Blog Posts
+## Uploaded Blog Posts (Tax & Purpose)
 
-| ID | Title | Slug | Status |
-|----|-------|------|--------|
-| 1 | Profit mit Purpose: Wie Impact-Unternehmen die Wirtschaft transformieren | profit-mit-purpose-wie-impact-unternehmen-die-wirtschaft-transformieren | published |
-| 2 | Revolutionäre mit Geschäftssinn: Die Welt der Social Entrepreneurs | social-entrepreneurs | published |
+| ID | Title | Slug | Date |
+|----|-------|------|------|
+| 10 | Profit mit Purpose: Wie Impact-Unternehmen die Wirtschaft transformieren | profit-mit-purpose-wie-impact-unternehmen-die-wirtschaft-transformieren | 19. März 2026 |
+| 11 | Revolutionäre mit Geschäftssinn: Die Welt der Social Entrepreneurs | revolutionaere-mit-geschaeftssinn-die-welt-der-social-entrepreneurs | 19. März 2026 |
+| 13 | Die Konvergenz: Wo Impact-Unternehmen und Social Entrepreneurs zusammenkommen | die-konvergenz-wo-impact-unternehmen-und-social-entrepreneurs-zusammenkommen | 19. März 2026 |
 
-**Note:** Posts uploaded from Word documents in `src/word_blogs/` on March 21, 2026.
+**Note:** Posts uploaded from Word documents in `src/word_blogs/` using `upload-word-v3.js`.
