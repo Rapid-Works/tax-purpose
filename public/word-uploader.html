@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Word zu Blog Post</title>
+  <script src="https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      background: #f5f5f5;
+      color: #333;
+    }
+    h1 { color: #1a1a2e; margin-bottom: 10px; }
+    .subtitle { color: #666; margin-bottom: 30px; }
+    .upload-area {
+      border: 3px dashed #ccc;
+      border-radius: 12px;
+      padding: 60px 20px;
+      text-align: center;
+      background: white;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .upload-area:hover, .upload-area.dragover {
+      border-color: #4a6cf7;
+      background: #f0f4ff;
+    }
+    .upload-area input { display: none; }
+    .upload-icon { font-size: 48px; margin-bottom: 10px; }
+    .form-group { margin: 20px 0; }
+    label { display: block; margin-bottom: 8px; font-weight: 600; }
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    textarea { min-height: 100px; resize: vertical; }
+    .preview {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+      display: none;
+    }
+    .preview h3 { margin-top: 0; }
+    .preview-content {
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid #eee;
+      padding: 15px;
+      border-radius: 8px;
+    }
+    .btn {
+      padding: 14px 28px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .btn-primary {
+      background: #4a6cf7;
+      color: white;
+    }
+    .btn-primary:hover { background: #3a5ce7; }
+    .btn-primary:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    .btn-secondary {
+      background: #e0e0e0;
+      color: #333;
+      margin-left: 10px;
+    }
+    .btn-secondary:hover { background: #d0d0d0; }
+    .status {
+      padding: 15px;
+      border-radius: 8px;
+      margin: 20px 0;
+      display: none;
+    }
+    .status.success { background: #d4edda; color: #155724; display: block; }
+    .status.error { background: #f8d7da; color: #721c24; display: block; }
+    .actions { margin-top: 20px; }
+    .login-section {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    .login-section h3 { margin: 0 0 15px 0; }
+    .form-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .login-input {
+      flex: 1;
+      min-width: 150px;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    .login-hint {
+      margin: 10px 0 0 0;
+      font-size: 13px;
+      color: #888;
+    }
+    .logged-in-section {
+      background: #d4edda;
+      padding: 12px 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logged-in-badge { color: #155724; }
+    .btn-link {
+      background: none;
+      border: none;
+      color: #155724;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .upload-area.disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    .file-name {
+      margin-top: 15px;
+      padding: 10px;
+      background: #e8f4e8;
+      border-radius: 6px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Word zu Blog Post</h1>
+  <p class="subtitle">Laden Sie Ihr Word-Dokument hoch, um es in einen Blog-Beitrag zu konvertieren.</p>
+
+  <!-- Login Section -->
+  <div id="loginSection" class="login-section">
+    <h3>Anmeldung</h3>
+    <div class="form-row">
+      <input type="email" id="loginEmail" placeholder="E-Mail" class="login-input">
+      <input type="password" id="loginPassword" placeholder="Passwort" class="login-input">
+      <button class="btn btn-primary" id="loginBtn">Anmelden</button>
+    </div>
+    <p class="login-hint">Verwenden Sie Ihre Directus-Anmeldedaten</p>
+  </div>
+
+  <!-- Logged in indicator -->
+  <div id="loggedInSection" class="logged-in-section" style="display: none;">
+    <span class="logged-in-badge">✓ Angemeldet als <strong id="loggedInEmail"></strong></span>
+    <button class="btn-link" id="logoutBtn">Abmelden</button>
+  </div>
+
+  <div class="upload-area" id="uploadArea">
+    <div class="upload-icon">📄</div>
+    <p><strong>Word-Datei hierher ziehen</strong></p>
+    <p>oder klicken zum Auswählen</p>
+    <input type="file" id="fileInput" accept=".docx">
+  </div>
+  <div class="file-name" id="fileName"></div>
+
+  <div class="form-group">
+    <label for="title">Titel</label>
+    <input type="text" id="title" placeholder="Wird aus Dateiname extrahiert...">
+  </div>
+
+  <div class="form-group">
+    <label for="summary">Zusammenfassung</label>
+    <textarea id="summary" placeholder="Kurze Beschreibung des Artikels..."></textarea>
+  </div>
+
+  <div class="preview" id="preview">
+    <h3>Vorschau</h3>
+    <div class="preview-content" id="previewContent"></div>
+  </div>
+
+  <div id="status" class="status"></div>
+
+  <div class="actions">
+    <button class="btn btn-primary" id="uploadBtn" disabled>
+      In Directus hochladen
+    </button>
+    <button class="btn btn-secondary" id="copyBtn" disabled>
+      HTML kopieren
+    </button>
+  </div>
+
+  <script>
+    const DIRECTUS_URL = 'https://directus.rapid-works.io';
+    const CLIENT_ID = 1; // tax-purpose
+
+    let htmlContent = '';
+    let accessToken = sessionStorage.getItem('directus_token');
+    let userEmail = sessionStorage.getItem('directus_email');
+
+    const loginSection = document.getElementById('loginSection');
+    const loggedInSection = document.getElementById('loggedInSection');
+    const loggedInEmail = document.getElementById('loggedInEmail');
+    const loginEmail = document.getElementById('loginEmail');
+    const loginPassword = document.getElementById('loginPassword');
+    const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const fileName = document.getElementById('fileName');
+    const titleInput = document.getElementById('title');
+    const summaryInput = document.getElementById('summary');
+    const preview = document.getElementById('preview');
+    const previewContent = document.getElementById('previewContent');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const copyBtn = document.getElementById('copyBtn');
+    const status = document.getElementById('status');
+
+    // Drag and drop
+    uploadArea.addEventListener('click', () => fileInput.click());
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('dragover');
+    });
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.classList.remove('dragover');
+    });
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('dragover');
+      if (e.dataTransfer.files[0]) {
+        handleFile(e.dataTransfer.files[0]);
+      }
+    });
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files[0]) {
+        handleFile(e.target.files[0]);
+      }
+    });
+
+    async function handleFile(file) {
+      if (!file.name.endsWith('.docx')) {
+        showStatus('Bitte eine .docx Datei auswählen', 'error');
+        return;
+      }
+
+      fileName.textContent = '📎 ' + file.name;
+      fileName.style.display = 'block';
+
+      // Extract title from filename
+      const title = file.name
+        .replace('.docx', '')
+        .replace(/^\d+\.\s*/, '')
+        .replace(/Artikel_/i, '')
+        .replace(/_/g, ' ')
+        .trim();
+      titleInput.value = title;
+      summaryInput.value = title;
+
+      // Convert with mammoth
+      try {
+        const arrayBuffer = await file.arrayBuffer();
+        const result = await mammoth.convertToHtml({ arrayBuffer });
+
+        htmlContent = result.value;
+
+        // Remove first h1 (title)
+        htmlContent = htmlContent.replace(/<h1>.*?<\/h1>/, '');
+
+        // Show preview
+        previewContent.innerHTML = htmlContent;
+        preview.style.display = 'block';
+
+        uploadBtn.disabled = false;
+        copyBtn.disabled = false;
+
+        showStatus('Datei erfolgreich konvertiert!', 'success');
+      } catch (err) {
+        showStatus('Fehler beim Konvertieren: ' + err.message, 'error');
+      }
+    }
+
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(htmlContent).then(() => {
+        showStatus('HTML in Zwischenablage kopiert!', 'success');
+      });
+    });
+
+    uploadBtn.addEventListener('click', async () => {
+      const title = titleInput.value.trim();
+      const summary = summaryInput.value.trim();
+
+      if (!title) {
+        showStatus('Bitte einen Titel eingeben', 'error');
+        return;
+      }
+
+      uploadBtn.disabled = true;
+      uploadBtn.textContent = 'Wird hochgeladen...';
+
+      try {
+        // Prompt for credentials
+        const email = prompt('Directus E-Mail:');
+        const password = prompt('Directus Passwort:');
+
+        if (!email || !password) {
+          throw new Error('Anmeldedaten erforderlich');
+        }
+
+        // Login
+        const loginRes = await fetch(`${DIRECTUS_URL}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        if (!loginRes.ok) throw new Error('Anmeldung fehlgeschlagen');
+        const loginData = await loginRes.json();
+        accessToken = loginData.data.access_token;
+
+        // Generate slug
+        const slug = title
+          .toLowerCase()
+          .replace(/ä/g, 'ae').replace(/ö/g, 'oe')
+          .replace(/ü/g, 'ue').replace(/ß/g, 'ss')
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-|-$/g, '');
+
+        // Convert HTML to Tiptap JSON (simplified - just wrap in doc)
+        const tiptapJson = htmlToTiptapJson(htmlContent);
+
+        // Create post
+        const postRes = await fetch(`${DIRECTUS_URL}/items/posts`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            title,
+            slug,
+            content: tiptapJson,
+            summary,
+            status: 'published',
+            client: CLIENT_ID
+          })
+        });
+
+        if (!postRes.ok) {
+          const err = await postRes.text();
+          throw new Error(err);
+        }
+
+        const postData = await postRes.json();
+        showStatus(`Erfolgreich hochgeladen! Post ID: ${postData.data.id}`, 'success');
+
+      } catch (err) {
+        showStatus('Fehler: ' + err.message, 'error');
+      } finally {
+        uploadBtn.disabled = false;
+        uploadBtn.textContent = 'In Directus hochladen';
+      }
+    });
+
+    function htmlToTiptapJson(html) {
+      // Simple HTML to Tiptap JSON converter
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+      const content = [];
+
+      function processNode(node) {
+        if (node.nodeType === Node.TEXT_NODE) {
+          const text = node.textContent;
+          if (text.trim()) {
+            return { type: 'text', text };
+          }
+          return null;
+        }
+
+        if (node.nodeType === Node.ELEMENT_NODE) {
+          const tag = node.tagName.toLowerCase();
+
+          if (tag === 'h1') {
+            return { type: 'heading', attrs: { level: 1 }, content: processChildren(node) };
+          }
+          if (tag === 'h2') {
+            return { type: 'heading', attrs: { level: 2 }, content: processChildren(node) };
+          }
+          if (tag === 'h3') {
+            return { type: 'heading', attrs: { level: 3 }, content: processChildren(node) };
+          }
+          if (tag === 'h4') {
+            return { type: 'heading', attrs: { level: 4 }, content: processChildren(node) };
+          }
+          if (tag === 'p') {
+            const children = processChildren(node);
+            if (children.length === 0) return null;
+            return { type: 'paragraph', content: children };
+          }
+          if (tag === 'ul') {
+            return { type: 'bulletList', content: processChildren(node) };
+          }
+          if (tag === 'ol') {
+            return { type: 'orderedList', content: processChildren(node) };
+          }
+          if (tag === 'li') {
+            return { type: 'listItem', content: [{ type: 'paragraph', content: processChildren(node) }] };
+          }
+          if (tag === 'strong' || tag === 'b') {
+            const children = processChildren(node);
+            return children.map(c => c.type === 'text' ? { ...c, marks: [{ type: 'bold' }] } : c);
+          }
+          if (tag === 'em' || tag === 'i') {
+            const children = processChildren(node);
+            return children.map(c => c.type === 'text' ? { ...c, marks: [{ type: 'italic' }] } : c);
+          }
+          if (tag === 'blockquote') {
+            return { type: 'blockquote', content: processChildren(node) };
+          }
+          if (tag === 'hr') {
+            return { type: 'horizontalRule' };
+          }
+          if (tag === 'br') {
+            return { type: 'hardBreak' };
+          }
+
+          // Default: process children
+          return processChildren(node);
+        }
+        return null;
+      }
+
+      function processChildren(node) {
+        const results = [];
+        for (const child of node.childNodes) {
+          const result = processNode(child);
+          if (result) {
+            if (Array.isArray(result)) {
+              results.push(...result);
+            } else {
+              results.push(result);
+            }
+          }
+        }
+        return results;
+      }
+
+      for (const child of doc.body.childNodes) {
+        const result = processNode(child);
+        if (result) {
+          if (Array.isArray(result)) {
+            content.push(...result);
+          } else {
+            content.push(result);
+          }
+        }
+      }
+
+      return { type: 'doc', content };
+    }
+
+    function showStatus(message, type) {
+      status.textContent = message;
+      status.className = 'status ' + type;
+    }
+  </script>
+</body>
+</html>

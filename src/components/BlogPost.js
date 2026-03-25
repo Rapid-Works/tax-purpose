@@ -1,13 +1,44 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getPostBySlug } from '../directus/client';
 import { ArrowLeft, Calendar } from 'lucide-react';
+import { generateHTML } from '@tiptap/html';
+import StarterKit from '@tiptap/starter-kit';
 
 const BlogPost = ({ t, lang }) => {
   const { slug } = useParams();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Convert Tiptap JSON to HTML (handles both JSON and legacy HTML content)
+  const contentHtml = useMemo(() => {
+    if (!post?.content) return '';
+
+    // If content is already HTML string (legacy), return as-is
+    if (typeof post.content === 'string') {
+      // Check if it looks like HTML (starts with < or contains HTML tags)
+      if (post.content.trim().startsWith('<') || /<[a-z][\s\S]*>/i.test(post.content)) {
+        return post.content;
+      }
+      // Try parsing as JSON string
+      try {
+        const parsed = JSON.parse(post.content);
+        if (parsed.type === 'doc') {
+          return generateHTML(parsed, [StarterKit]);
+        }
+      } catch {
+        return post.content;
+      }
+    }
+
+    // If content is Tiptap JSON object
+    if (typeof post.content === 'object' && post.content.type === 'doc') {
+      return generateHTML(post.content, [StarterKit]);
+    }
+
+    return '';
+  }, [post?.content]);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -112,7 +143,7 @@ const BlogPost = ({ t, lang }) => {
         )}
 
         {/* Body Content */}
-        {post.content && (
+        {contentHtml && (
           <div
             className="prose prose-lg max-w-none
               prose-headings:text-text prose-headings:font-serif
@@ -126,7 +157,7 @@ const BlogPost = ({ t, lang }) => {
               prose-img:rounded-xl prose-img:shadow-lg
               prose-figcaption:text-text/60 prose-figcaption:text-center
               prose-table:my-6"
-            dangerouslySetInnerHTML={{ __html: post.content }}
+            dangerouslySetInnerHTML={{ __html: contentHtml }}
           />
         )}
 

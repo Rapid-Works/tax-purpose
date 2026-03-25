@@ -493,3 +493,107 @@ node scripts/upload-word-v3.js --all --dry-run
 | 13 | Die Konvergenz: Wo Impact-Unternehmen und Social Entrepreneurs zusammenkommen | die-konvergenz-wo-impact-unternehmen-und-social-entrepreneurs-zusammenkommen | 19. März 2026 |
 
 **Note:** Posts uploaded from Word documents in `src/word_blogs/` using `upload-word-v3.js`.
+
+---
+
+## WYSIWYG Editor Migration (TinyMCE → Flexible Editor)
+
+### Problem
+
+The default TinyMCE WYSIWYG editor in Directus had an intermittent bug where it would randomly fail to render, showing "Full HTML content" instead of the editor interface. This is a known issue (GitHub #11989) related to browser extension interference and DOM timing conflicts.
+
+### Solution
+
+Migrated to the **Flexible Editor** extension which uses Tiptap instead of TinyMCE.
+
+### Installation Steps
+
+1. **Created Dockerfile** at `/opt/directus/Dockerfile`:
+   ```dockerfile
+   FROM docker.io/directus/directus:11.17.0
+   USER root
+   RUN corepack enable
+   USER node
+   RUN pnpm install directus-extension-flexible-editor
+   ```
+
+2. **Updated docker-compose.yml** to build from Dockerfile:
+   ```yaml
+   directus:
+     build:
+       context: ./
+     # ... rest of config
+   ```
+
+3. **Rebuilt and restarted** Directus:
+   ```bash
+   cd /opt/directus
+   podman-compose build --no-cache
+   podman-compose down && podman-compose up -d
+   ```
+
+### Content Migration
+
+The Flexible Editor uses **Tiptap JSON** format instead of HTML. Migration script created at `scripts/migrate-to-tiptap.js`:
+
+```bash
+# Preview changes
+node scripts/migrate-to-tiptap.js --dry-run
+
+# Apply migration
+node scripts/migrate-to-tiptap.js
+```
+
+### Field Configuration
+
+Updated via API:
+- **Field type**: `json` (was `text`)
+- **Interface**: `flexible-editor-interface`
+
+```bash
+# Update field type to JSON
+curl -X PATCH "https://directus.rapid-works.io/fields/posts/content" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"type":"json","schema":{"data_type":"json"},"meta":{"interface":"flexible-editor-interface"}}'
+```
+
+### New Upload Script
+
+Simplified Word upload script at `scripts/upload-word.js`:
+- Uses **mammoth** for Word → HTML conversion
+- Uses **@tiptap/html** for HTML → JSON conversion
+- Stores content as Tiptap JSON directly
+
+```bash
+# Upload single document
+node scripts/upload-word.js path/to/article.docx
+
+# Upload all documents
+node scripts/upload-word.js --all
+```
+
+### Dependencies Added
+
+```bash
+npm install mammoth @tiptap/html @tiptap/starter-kit @tiptap/pm --save-dev
+```
+
+### Data Flow
+
+```
+Word Document → HTML (mammoth) → Tiptap JSON → Directus → Frontend
+                                                          ↓
+                                              JSON → HTML (tiptap)
+```
+
+### Frontend Update Required
+
+The frontend `BlogPost.js` needs to convert Tiptap JSON back to HTML for rendering. Use `generateHTML` from `@tiptap/html`:
+
+```javascript
+import { generateHTML } from '@tiptap/html';
+import StarterKit from '@tiptap/starter-kit';
+
+const html = generateHTML(post.content, [StarterKit]);
+```
