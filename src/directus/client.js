@@ -14,12 +14,12 @@ export async function getPosts(limit = 10) {
     const posts = await client.request(
       readItems('posts', {
         limit,
-        sort: ['-id'],
+        sort: ['sort', '-date_created'],
         filter: {
           status: { _eq: 'published' },
           client: { slug: { _eq: clientSlug } }
         },
-        fields: ['id', 'slug', 'title', 'summary', 'featured_image', 'status', 'date_created']
+        fields: ['id', 'slug', 'title', 'summary', 'featured_image', 'status', 'date_created', 'sort']
       })
     );
     return posts;
@@ -38,12 +38,12 @@ export async function getPostsPaginated(page = 1, pageSize = 9) {
       readItems('posts', {
         limit: pageSize + 1,
         offset,
-        sort: ['-id'],
+        sort: ['sort', '-date_created'],
         filter: {
           status: { _eq: 'published' },
           client: { slug: { _eq: clientSlug } }
         },
-        fields: ['id', 'slug', 'title', 'summary', 'featured_image', 'status', 'date_created']
+        fields: ['id', 'slug', 'title', 'summary', 'featured_image', 'status', 'date_created', 'sort']
       })
     );
 
