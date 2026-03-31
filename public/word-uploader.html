@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
   <style>
     :root {
       --text: #3C393A;
@@ -479,15 +479,16 @@
       titleInput.value = title;
       summaryInput.value = title;
 
-      // Convert with mammoth
+      // Convert DOCX by parsing XML directly (same approach as working upload-word-v3.js)
       try {
         const arrayBuffer = await file.arrayBuffer();
-        const result = await mammoth.convertToHtml({ arrayBuffer });
 
-        htmlContent = result.value;
+        // Unzip DOCX and extract document.xml
+        const zip = await JSZip.loadAsync(arrayBuffer);
+        const documentXml = await zip.file('word/document.xml').async('string');
 
-        // Remove first h1 (title)
-        htmlContent = htmlContent.replace(/<h1>.*?<\/h1>/, '');
+        // Parse XML to HTML
+        htmlContent = xmlToHtml(documentXml);
 
         // Show preview
         previewContent.innerHTML = htmlContent;
@@ -500,6 +501,144 @@
       } catch (err) {
         showStatus('Fehler beim Konvertieren: ' + err.message, 'error');
       }
+    }
+
+    // Direct XML to HTML conversion (ported from upload-word-v3.js)
+    function xmlToHtml(xml) {
+      let html = '';
+      let skipFirstH1 = true; // Skip title since it's handled separately
+
+      // Extract paragraphs and tables
+      const paragraphRegex = /<w:p[^>]*>([\s\S]*?)<\/w:p>/g;
+      const tableRegex = /<w:tbl[^>]*>([\s\S]*?)<\/w:tbl>/g;
+
+      // Find all tables and their positions
+      const tables = [];
+      let tableMatch;
+      while ((tableMatch = tableRegex.exec(xml)) !== null) {
+        tables.push({
+          start: tableMatch.index,
+          end: tableMatch.index + tableMatch[0].length,
+          content: tableMatch[0]
+        });
+      }
+
+      // Process paragraphs
+      let match;
+      while ((match = paragraphRegex.exec(xml)) !== null) {
+        // Skip if inside a table
+        const isInTable = tables.some(t => match.index >= t.start && match.index <= t.end);
+        if (isInTable) continue;
+
+        const pContent = match[1];
+
+        // Get paragraph style
+        const styleMatch = pContent.match(/<w:pStyle w:val="([^"]+)"/);
+        const style = styleMatch ? styleMatch[1] : 'Normal';
+
+        // Get all text content with formatting
+        const runs = [];
+        const runRegex = /<w:r[^>]*>([\s\S]*?)<\/w:r>/g;
+        let runMatch;
+        while ((runMatch = runRegex.exec(pContent)) !== null) {
+          const runContent = runMatch[1];
+          const textMatch = runContent.match(/<w:t[^>]*>([^<]*)<\/w:t>/);
+          if (textMatch) {
+            const isBold = runContent.includes('<w:b/>') || runContent.includes('<w:b ');
+            const isItalic = runContent.includes('<w:i/>') || runContent.includes('<w:i ');
+            runs.push({ text: textMatch[1], bold: isBold, italic: isItalic });
+          }
+        }
+
+        if (runs.length === 0) continue;
+
+        const fullText = runs.map(r => r.text).join('').trim();
+        if (!fullText) continue;
+
+        // Map styles to HTML tags
+        let tag = 'p';
+        if (style === 'MdHeading1' || style === 'Titel') {
+          if (skipFirstH1) {
+            skipFirstH1 = false;
+            continue; // Skip title
+          }
+          tag = 'h1';
+        } else if (style === 'MdHeading2') {
+          tag = 'h2';
+        } else if (style === 'MdHeading3') {
+          tag = 'h3';
+        } else if (style === 'MdHeading4') {
+          tag = 'h4';
+        } else if (style === 'MdListItem') {
+          tag = 'li';
+        } else if (style === 'MdHr') {
+          html += '<hr />\n';
+          continue;
+        } else if (style === 'MdSpace') {
+          continue;
+        }
+
+        // Build content with inline formatting
+        let content = '';
+        const allBold = runs.every(r => r.bold);
+        const isHeading = tag.startsWith('h');
+
+        for (const run of runs) {
+          let text = run.text
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+
+          // Apply inline formatting (skip if heading or all runs are bold)
+          if (!isHeading && !allBold) {
+            if (run.bold) text = `<strong>${text}</strong>`;
+            if (run.italic) text = `<em>${text}</em>`;
+          }
+          content += text;
+        }
+
+        // If all runs are bold and it's a paragraph, wrap in strong
+        if (allBold && tag === 'p') {
+          content = `<strong>${content}</strong>`;
+        }
+
+        html += `<${tag}>${content}</${tag}>\n`;
+      }
+
+      // Process tables
+      for (const table of tables) {
+        html += '<table>\n';
+        const rowRegex = /<w:tr[^>]*>([\s\S]*?)<\/w:tr>/g;
+        let rowMatch;
+        let isFirstRow = true;
+
+        while ((rowMatch = rowRegex.exec(table.content)) !== null) {
+          html += '<tr>\n';
+          const cellRegex = /<w:tc[^>]*>([\s\S]*?)<\/w:tc>/g;
+          let cellMatch;
+
+          while ((cellMatch = cellRegex.exec(rowMatch[1])) !== null) {
+            const cellTag = isFirstRow ? 'th' : 'td';
+            const textRegex = /<w:t[^>]*>([^<]*)<\/w:t>/g;
+            let cellText = '';
+            let textMatch;
+            while ((textMatch = textRegex.exec(cellMatch[1])) !== null) {
+              cellText += textMatch[1];
+            }
+            html += `<${cellTag}>${cellText.trim()}</${cellTag}>\n`;
+          }
+          html += '</tr>\n';
+          isFirstRow = false;
+        }
+        html += '</table>\n';
+      }
+
+      // Group consecutive li items into ul
+      html = html.replace(/(<li>[\s\S]*?<\/li>\n)+/g, (match) => {
+        return '<ul>\n' + match + '</ul>\n';
+      });
+
+      return html;
     }
 
     copyBtn.addEventListener('click', () => {
