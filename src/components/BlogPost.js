@@ -4,6 +4,10 @@ import { getPostBySlug } from '../directus/client';
 import { ArrowLeft, Calendar } from 'lucide-react';
 import { generateHTML } from '@tiptap/html';
 import StarterKit from '@tiptap/starter-kit';
+import Table from '@tiptap/extension-table';
+import TableRow from '@tiptap/extension-table-row';
+import TableCell from '@tiptap/extension-table-cell';
+import TableHeader from '@tiptap/extension-table-header';
 
 const BlogPost = ({ t, lang }) => {
   const { slug } = useParams();
@@ -25,7 +29,7 @@ const BlogPost = ({ t, lang }) => {
       try {
         const parsed = JSON.parse(post.content);
         if (parsed.type === 'doc') {
-          return generateHTML(parsed, [StarterKit]);
+          return generateHTML(parsed, [StarterKit, Table, TableRow, TableCell, TableHeader]);
         }
       } catch {
         return post.content;
@@ -34,7 +38,7 @@ const BlogPost = ({ t, lang }) => {
 
     // If content is Tiptap JSON object
     if (typeof post.content === 'object' && post.content.type === 'doc') {
-      return generateHTML(post.content, [StarterKit]);
+      return generateHTML(post.content, [StarterKit, Table, TableRow, TableCell, TableHeader]);
     }
 
     return '';
