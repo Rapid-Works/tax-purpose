@@ -148,6 +148,77 @@
       background: #fdfafa;
     }
 
+    .preview-content h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin: 0 0 16px 0;
+    }
+
+    .preview-content h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin: 20px 0 12px 0;
+    }
+
+    .preview-content h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text);
+      margin: 16px 0 10px 0;
+    }
+
+    .preview-content h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin: 14px 0 8px 0;
+    }
+
+    .preview-content p {
+      margin: 0 0 12px 0;
+      line-height: 1.6;
+    }
+
+    .preview-content ul, .preview-content ol {
+      margin: 12px 0;
+      padding-left: 24px;
+    }
+
+    .preview-content li {
+      margin: 6px 0;
+      line-height: 1.5;
+    }
+
+    .preview-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.9rem;
+    }
+
+    .preview-content th, .preview-content td {
+      border: 1px solid var(--secondary);
+      padding: 10px 12px;
+      text-align: left;
+    }
+
+    .preview-content th {
+      background: var(--secondary);
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .preview-content hr {
+      border: none;
+      border-top: 2px solid var(--secondary);
+      margin: 20px 0;
+    }
+
     .btn {
       padding: 14px 28px;
       border: none;
@@ -330,8 +401,13 @@
   </div>
 
   <div class="form-group">
-    <label for="summary">Zusammenfassung</label>
+    <label for="summary">Inhalt</label>
     <textarea id="summary" placeholder="Kurze Beschreibung des Artikels..."></textarea>
+  </div>
+
+  <div class="form-group">
+    <label for="publishDate">Veröffentlichungsdatum</label>
+    <input type="datetime-local" id="publishDate">
   </div>
 
   <div class="preview card" id="preview">
@@ -370,6 +446,7 @@
     const fileName = document.getElementById('fileName');
     const titleInput = document.getElementById('title');
     const summaryInput = document.getElementById('summary');
+    const publishDateInput = document.getElementById('publishDate');
     const preview = document.getElementById('preview');
     const previewContent = document.getElementById('previewContent');
     const uploadBtn = document.getElementById('uploadBtn');
@@ -478,6 +555,11 @@
         .trim();
       titleInput.value = title;
       summaryInput.value = title;
+
+      // Set default publish date to now
+      const now = new Date();
+      now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+      publishDateInput.value = now.toISOString().slice(0, 16);
 
       // Convert DOCX by parsing XML directly (same approach as working upload-word-v3.js)
       try {
@@ -650,6 +732,7 @@
     uploadBtn.addEventListener('click', async () => {
       const title = titleInput.value.trim();
       const summary = summaryInput.value.trim();
+      const publishDate = publishDateInput.value;
 
       if (!title) {
         showStatus('Bitte einen Titel eingeben', 'error');
@@ -689,8 +772,9 @@
             slug,
             content: tiptapJson,
             summary,
-            status: 'published',
-            client: CLIENT_ID
+            status: 'draft',
+            client: CLIENT_ID,
+            ...(publishDate && { publish_date: new Date(publishDate).toISOString() })
           })
         });
 

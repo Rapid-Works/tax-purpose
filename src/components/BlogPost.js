@@ -137,11 +137,11 @@ const BlogPost = ({ t, lang }) => {
         </h1>
 
         {/* Meta - only show if date is available */}
-        {post.date_created && (
+        {(post.publish_date || post.date_created) && (
           <div className="flex flex-wrap items-center gap-4 text-text/60 mb-8 pb-8 border-b border-primary/20">
             <span className="flex items-center gap-2">
               <Calendar className="w-4 h-4" />
-              {formatDate(post.date_created)}
+              {formatDate(post.publish_date || post.date_created)}
             </span>
           </div>
         )}
