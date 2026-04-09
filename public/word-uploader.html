@@ -219,6 +219,15 @@
       margin: 20px 0;
     }
 
+    .preview-content u {
+      text-decoration: underline;
+    }
+
+    .preview-content mark {
+      background-color: #ffeb3b;
+      padding: 0 2px;
+    }
+
     .btn {
       padding: 14px 28px;
       border: none;
@@ -588,7 +597,7 @@
     // Direct XML to HTML conversion (ported from upload-word-v3.js)
     function xmlToHtml(xml) {
       let html = '';
-      let skipFirstH1 = true; // Skip title since it's handled separately
+      let skipFirstH1 = false; // Show all headings in preview
 
       // Extract paragraphs and tables
       const paragraphRegex = /<w:p[^>]*>([\s\S]*?)<\/w:p>/g;
@@ -628,7 +637,12 @@
           if (textMatch) {
             const isBold = runContent.includes('<w:b/>') || runContent.includes('<w:b ');
             const isItalic = runContent.includes('<w:i/>') || runContent.includes('<w:i ');
-            runs.push({ text: textMatch[1], bold: isBold, italic: isItalic });
+            const isUnderline = runContent.includes('<w:u ') || runContent.includes('<w:u/>');
+            const isHighlight = runContent.includes('<w:highlight');
+            // Check for text color
+            const colorMatch = runContent.match(/<w:color w:val="([^"]+)"/);
+            const textColor = colorMatch ? colorMatch[1] : null;
+            runs.push({ text: textMatch[1], bold: isBold, italic: isItalic, underline: isUnderline, highlight: isHighlight, color: textColor });
           }
         }
 
@@ -637,21 +651,37 @@
         const fullText = runs.map(r => r.text).join('').trim();
         if (!fullText) continue;
 
-        // Map styles to HTML tags
+        // Check if paragraph is a list item (has numbering properties)
+        const isListItem = pContent.includes('<w:numPr>') || style === 'MdListItem' ||
+                          style === 'ListParagraph' || style === 'Listenabsatz';
+
+        // Map styles to HTML tags (support both custom Md* and standard Word styles)
         let tag = 'p';
-        if (style === 'MdHeading1' || style === 'Titel') {
+        const styleLower = style.toLowerCase();
+
+        // Heading 1 detection
+        if (style === 'MdHeading1' || style === 'Titel' ||
+            style === 'Heading1' || style === 'berschrift1' || style === 'berschrift' ||
+            styleLower.includes('heading1') || styleLower.includes('heading 1')) {
           if (skipFirstH1) {
             skipFirstH1 = false;
             continue; // Skip title
           }
           tag = 'h1';
-        } else if (style === 'MdHeading2') {
+        // Heading 2 detection
+        } else if (style === 'MdHeading2' || style === 'Heading2' || style === 'berschrift2' ||
+                   styleLower.includes('heading2') || styleLower.includes('heading 2')) {
           tag = 'h2';
-        } else if (style === 'MdHeading3') {
+        // Heading 3 detection
+        } else if (style === 'MdHeading3' || style === 'Heading3' || style === 'berschrift3' ||
+                   styleLower.includes('heading3') || styleLower.includes('heading 3')) {
           tag = 'h3';
-        } else if (style === 'MdHeading4') {
+        // Heading 4 detection
+        } else if (style === 'MdHeading4' || style === 'Heading4' || style === 'berschrift4' ||
+                   styleLower.includes('heading4') || styleLower.includes('heading 4')) {
           tag = 'h4';
-        } else if (style === 'MdListItem') {
+        // List item detection
+        } else if (isListItem) {
           tag = 'li';
         } else if (style === 'MdHr') {
           html += '<hr />\n';
@@ -675,6 +705,12 @@
           if (!isHeading && !allBold) {
             if (run.bold) text = `<strong>${text}</strong>`;
             if (run.italic) text = `<em>${text}</em>`;
+            if (run.underline) text = `<u>${text}</u>`;
+          }
+          // Always apply highlight and color (even in headings)
+          if (run.highlight) text = `<mark>${text}</mark>`;
+          if (run.color && run.color !== '000000' && run.color !== 'auto') {
+            text = `<span style="color:#${run.color}">${text}</span>`;
           }
           content += text;
         }
