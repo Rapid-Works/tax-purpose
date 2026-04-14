@@ -396,43 +396,47 @@
     <button class="btn-link" id="logoutBtn">Abmelden</button>
   </div>
 
-  <div class="upload-area" id="uploadArea">
-    <div class="upload-icon">📄</div>
-    <p><strong>Word-Datei hierher ziehen</strong></p>
-    <p>oder klicken zum Auswählen</p>
-    <input type="file" id="fileInput" accept=".docx">
-  </div>
-  <div class="file-name" id="fileName"></div>
-
-  <div class="form-group">
-    <label for="title">Titel</label>
-    <input type="text" id="title" placeholder="Wird aus Dateiname extrahiert...">
-  </div>
-
-  <div class="form-group">
-    <label for="summary">Inhalt</label>
-    <textarea id="summary" placeholder="Kurze Beschreibung des Artikels..."></textarea>
-  </div>
-
-  <div class="form-group">
-    <label for="publishDate">Veröffentlichungsdatum</label>
-    <input type="datetime-local" id="publishDate">
-  </div>
-
-  <div class="preview card" id="preview">
-    <h3>Vorschau</h3>
-    <div class="preview-content" id="previewContent"></div>
-  </div>
-
+  <!-- Status messages - visible always -->
   <div id="status" class="status"></div>
 
-  <div class="actions">
-    <button class="btn btn-primary" id="uploadBtn" disabled>
-      In Directus hochladen
-    </button>
-    <button class="btn btn-secondary" id="copyBtn" disabled>
-      HTML kopieren
-    </button>
+  <!-- Protected Content - Only visible after login -->
+  <div id="protectedContent" style="display: none;">
+    <div class="upload-area" id="uploadArea">
+      <div class="upload-icon">📄</div>
+      <p><strong>Word-Datei hierher ziehen</strong></p>
+      <p>oder klicken zum Auswählen</p>
+      <input type="file" id="fileInput" accept=".docx">
+    </div>
+    <div class="file-name" id="fileName"></div>
+
+    <div class="form-group">
+      <label for="title">Titel</label>
+      <input type="text" id="title" placeholder="Wird aus Dateiname extrahiert...">
+    </div>
+
+    <div class="form-group">
+      <label for="summary">Inhalt</label>
+      <textarea id="summary" placeholder="Kurze Beschreibung des Artikels..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="publishDate">Veröffentlichungsdatum</label>
+      <input type="datetime-local" id="publishDate">
+    </div>
+
+    <div class="preview card" id="preview">
+      <h3>Vorschau</h3>
+      <div class="preview-content" id="previewContent"></div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" id="uploadBtn" disabled>
+        In Directus hochladen
+      </button>
+      <button class="btn btn-secondary" id="copyBtn" disabled>
+        HTML kopieren
+      </button>
+    </div>
   </div>
 
   <script>
@@ -450,6 +454,7 @@
     const loginPassword = document.getElementById('loginPassword');
     const loginBtn = document.getElementById('loginBtn');
     const logoutBtn = document.getElementById('logoutBtn');
+    const protectedContent = document.getElementById('protectedContent');
     const uploadArea = document.getElementById('uploadArea');
     const fileInput = document.getElementById('fileInput');
     const fileName = document.getElementById('fileName');
@@ -468,9 +473,11 @@
         loginSection.style.display = 'none';
         loggedInSection.style.display = 'flex';
         loggedInEmail.textContent = userEmail;
+        protectedContent.style.display = 'block';
       } else {
         loginSection.style.display = 'block';
         loggedInSection.style.display = 'none';
+        protectedContent.style.display = 'none';
       }
     }
     updateAuthUI();
@@ -495,9 +502,13 @@
           body: JSON.stringify({ email, password })
         });
 
-        if (!res.ok) throw new Error('Anmeldung fehlgeschlagen');
-
         const data = await res.json();
+
+        if (!res.ok) {
+          const errorMsg = data.errors?.[0]?.message || 'Ungültige Anmeldedaten';
+          throw new Error(errorMsg);
+        }
+
         accessToken = data.data.access_token;
         userEmail = email;
 
