@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, Navigate, useLocation } from 'react-router-dom';
 import { Menu, X, Leaf, Users, Globe, Linkedin, Check, ChevronDown, BookOpen, ArrowUpRight } from "lucide-react"
 import bigFourImage from './images/big4.png'
 import leilaHeroImage from './images/leila1.jpeg'
@@ -18,6 +18,8 @@ import Logo from "./components/Logo"
 import Blog from "./components/Blog"
 import BlogPost from "./components/BlogPost"
 import BlogList from "./components/BlogList"
+import Courses from "./components/Courses"
+import Dashboard from "./components/Dashboard"
 
 console.log('Image path:', bigFourImage);
 
@@ -648,8 +650,31 @@ function App() {
 
   return (
     <Router>
+      <AppContent
+        t={t}
+        lang={lang}
+        setLang={setLang}
+        isScrolled={isScrolled}
+        isMenuOpen={isMenuOpen}
+        setIsMenuOpen={setIsMenuOpen}
+        navigation={navigation}
+        services={services}
+        currentTestimonials={currentTestimonials}
+      />
+    </Router>
+  )
+}
+
+// Inner component that can use useLocation
+function AppContent({ t, lang, setLang, isScrolled, isMenuOpen, setIsMenuOpen, navigation, services, currentTestimonials }) {
+  const location = useLocation();
+  const isDashboard = location.pathname === '/dashboard';
+
+  return (
+    <>
       <ScrollToTop />
-      <div className="min-h-screen font-sans text-text bg-background">
+      <div className={`min-h-screen font-sans text-text bg-background`}>
+        {!isDashboard && (
         <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? "bg-background shadow-md backdrop-blur-sm" : "bg-transparent"
           }`}>
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -798,8 +823,9 @@ function App() {
             </div>
           </div>
         </header>
+        )}
 
-        <main className="pt-24">
+        <main className={isDashboard ? "" : "pt-24"}>
           <Routes>
             <Route
               path="/"
@@ -816,9 +842,12 @@ function App() {
             <Route path="/imprint" element={<Impressum t={t} />} />
             <Route path="/blog/:slug" element={<BlogPost t={t} lang={lang} />} />
             <Route path="/blog" element={<BlogList t={t} lang={lang} />} />
+            <Route path="/courses" element={<Courses t={t} lang={lang} />} />
+            <Route path="/dashboard" element={<Dashboard />} />
           </Routes>
         </main>
 
+        {!isDashboard && (
       <footer className="relative bg-[#393639] text-white">
         <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           <div className="grid gap-8 lg:grid-cols-3">
@@ -883,8 +912,9 @@ function App() {
           </div>
         </div>
       </footer>
+        )}
     </div>
-    </Router>
+    </>
   )
 }
 

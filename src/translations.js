@@ -3,6 +3,7 @@ export const translations = {
     nav: {
       home: "Home",
       services: "Services",
+      courses: "Courses",
       about: "About me",
       blog: "Blog",
       partners: "Partners",
@@ -478,6 +479,7 @@ export const translations = {
     nav: {
       home: "Home",
       services: "Leistungen",
+      courses: "Kurse",
       about: "Über mich",
       blog: "Blog",
       partners: "Partner",
