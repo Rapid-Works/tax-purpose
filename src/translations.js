@@ -126,6 +126,17 @@ export const translations = {
       title: "Latest Insights",
       description: "Learn more about sustainable tax strategies and current developments in the purpose economy."
     },
+    courses: {
+      tag: "Courses & Events",
+      title: "Upcoming Courses & Events",
+      description: "Join our workshops and events to deepen your knowledge of sustainable tax strategies.",
+      viewAll: "View All Courses",
+      register: "Register",
+      free: "Free",
+      spotsLeft: "spots left",
+      online: "Online",
+      noUpcoming: "No upcoming courses at the moment. Check back soon!"
+    },
     testimonials: {
       tag: "Testimonials",
       title: "Insights into my Consulting and Commitment",
@@ -601,6 +612,17 @@ export const translations = {
       tag: "Blog",
       title: "Aktuelle Einblicke",
       description: "Erfahre mehr über nachhaltige Steuerstrategien und aktuelle Entwicklungen im Bereich Purpose Economy."
+    },
+    courses: {
+      tag: "Kurse & Events",
+      title: "Kommende Kurse & Veranstaltungen",
+      description: "Nehmen Sie an unseren Workshops und Veranstaltungen teil, um Ihr Wissen über nachhaltige Steuerstrategien zu vertiefen.",
+      viewAll: "Alle Kurse ansehen",
+      register: "Anmelden",
+      free: "Kostenlos",
+      spotsLeft: "Plätze frei",
+      online: "Online",
+      noUpcoming: "Momentan keine anstehenden Kurse. Schauen Sie bald wieder vorbei!"
     },
     testimonials: {
       tag: "Stimmen unserer Partner",

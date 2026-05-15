@@ -3,7 +3,7 @@ import { FileUp, Database, Globe, LogOut } from 'lucide-react';
 
 const DIRECTUS_API_URL = 'https://directus.rapid-works.io';
 const DIRECTUS_ADMIN_URL = 'https://directus.rapid-works.io/admin';
-const UAT_URL = 'https://www.taxandpurpose.com';
+const UAT_URL = '/home';
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('documents');

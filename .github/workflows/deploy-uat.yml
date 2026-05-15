@@ -1,0 +1,45 @@
+name: Deploy to UAT (Hetzner)
+
+on:
+  push:
+    branches: [feature/courses, develop]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test -- --watchAll=false --forceExit
+
+      - name: Build
+        run: npm run build
+        env:
+          REACT_APP_DIRECTUS_URL: https://directus.rapid-works.io
+          REACT_APP_DIRECTUS_TOKEN: ${{ secrets.DIRECTUS_TOKEN }}
+          REACT_APP_CLIENT_SLUG: tax-purpose
+
+      - name: Deploy to Hetzner
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HETZNER_HOST }}
+          username: ${{ secrets.HETZNER_USERNAME }}
+          key: ${{ secrets.HETZNER_SSH_KEY }}
+          source: "build/*"
+          target: "/opt/taxandpurpose/"
+          strip_components: 0
+
+      - name: Notify deployment
+        run: echo "Deployed to UAT at https://bos.taxandpurpose.rapid-works.io"

@@ -19,6 +19,7 @@ import Blog from "./components/Blog"
 import BlogPost from "./components/BlogPost"
 import BlogList from "./components/BlogList"
 import Courses from "./components/Courses"
+import CoursesSection from "./components/CoursesSection"
 import Dashboard from "./components/Dashboard"
 
 console.log('Image path:', bigFourImage);
@@ -266,6 +267,9 @@ const HomePageContent = ({ t, lang, services, currentTestimonials }) => {
 
       {/* Blog Section */}
       <Blog t={t} lang={lang} />
+
+      {/* Courses Section */}
+      <CoursesSection t={t} lang={lang} />
 
       {/* Testimonials Section */}
       <section id="testimonials" className="pt-12 pb-24 relative bg-background">
@@ -829,6 +833,17 @@ function AppContent({ t, lang, setLang, isScrolled, isMenuOpen, setIsMenuOpen, n
           <Routes>
             <Route
               path="/"
+              element={
+                <HomePageContent
+                  t={t}
+                  lang={lang}
+                  services={services}
+                  currentTestimonials={currentTestimonials}
+                />
+              }
+            />
+            <Route
+              path="/home"
               element={
                 <HomePageContent
                   t={t}
