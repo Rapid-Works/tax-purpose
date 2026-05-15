@@ -1,7 +1,8 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { BrowserRouter as Router, Routes, Route, Link, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { AuthProvider } from 'react-oidc-context';
 import { Menu, X, Leaf, Users, Globe, Linkedin, Check, ChevronDown, BookOpen, ArrowUpRight } from "lucide-react"
 import bigFourImage from './images/big4.png'
 import leilaHeroImage from './images/leila1.jpeg'
@@ -21,6 +22,8 @@ import BlogList from "./components/BlogList"
 import Courses from "./components/Courses"
 import CoursesSection from "./components/CoursesSection"
 import Dashboard from "./components/Dashboard"
+import AuthCallback from "./auth/AuthCallback"
+import { oidcConfig } from "./auth/config"
 
 console.log('Image path:', bigFourImage);
 
@@ -653,19 +656,21 @@ function App() {
   }));
 
   return (
-    <Router>
-      <AppContent
-        t={t}
-        lang={lang}
-        setLang={setLang}
-        isScrolled={isScrolled}
-        isMenuOpen={isMenuOpen}
-        setIsMenuOpen={setIsMenuOpen}
-        navigation={navigation}
-        services={services}
-        currentTestimonials={currentTestimonials}
-      />
-    </Router>
+    <AuthProvider {...oidcConfig}>
+      <Router>
+        <AppContent
+          t={t}
+          lang={lang}
+          setLang={setLang}
+          isScrolled={isScrolled}
+          isMenuOpen={isMenuOpen}
+          setIsMenuOpen={setIsMenuOpen}
+          navigation={navigation}
+          services={services}
+          currentTestimonials={currentTestimonials}
+        />
+      </Router>
+    </AuthProvider>
   )
 }
 
@@ -859,6 +864,7 @@ function AppContent({ t, lang, setLang, isScrolled, isMenuOpen, setIsMenuOpen, n
             <Route path="/blog" element={<BlogList t={t} lang={lang} />} />
             <Route path="/courses" element={<Courses t={t} lang={lang} />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/auth/callback" element={<AuthCallback />} />
           </Routes>
         </main>
 
