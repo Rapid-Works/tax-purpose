@@ -160,7 +160,7 @@ export const translations = {
           title: "Strategic Blueprint for Founders:",
           description: "Legal form, governance and the architecture between profit and impact",
           date: "Thu, 4 June 2026 · 7:00 PM (CET)",
-          link: "https://watch.getcontrast.io/register/taxandpurpose-purpose-impact-substanz-level-1-gruenden-mit-substanz?utm_source=website&utm_medium=banner"
+          link: "https://watch.getcontrast.io/register/taxandpurpose-purpose-impact-substanz-level-1-grunden-mit-substanz-2?utm_source=webiste&utm_medium=banner"
         },
         {
           level: "Level 2",
@@ -721,7 +721,7 @@ export const translations = {
           title: "Strategischer Bauplan für Gründer:",
           description: "Rechtsform, Governance und die Architektur zwischen Profit und Impact",
           date: "Do, 04. Juni 2026 · 19:00 Uhr",
-          link: "https://watch.getcontrast.io/register/taxandpurpose-purpose-impact-substanz-level-1-gruenden-mit-substanz?utm_source=website&utm_medium=banner"
+          link: "https://watch.getcontrast.io/register/taxandpurpose-purpose-impact-substanz-level-1-grunden-mit-substanz-2?utm_source=webiste&utm_medium=banner"
         },
         {
           level: "Level 2",
