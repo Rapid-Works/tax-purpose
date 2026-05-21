@@ -2,10 +2,23 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, MapPin, Users, ArrowRight } from 'lucide-react';
 import { getCourses, getCourseImageUrl, formatPrice, formatCourseDate } from '../directus/courses';
+import CourseRegistration from './CourseRegistration';
 
 const CoursesSection = ({ t, lang }) => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [showRegistration, setShowRegistration] = useState(false);
+
+  const handleRegisterClick = (course) => {
+    setSelectedCourse(course);
+    setShowRegistration(true);
+  };
+
+  const handleCloseRegistration = () => {
+    setShowRegistration(false);
+    setSelectedCourse(null);
+  };
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -39,6 +52,7 @@ const CoursesSection = ({ t, lang }) => {
   }
 
   return (
+    <>
     <section id="courses" className="py-24 relative bg-gradient-to-b from-white to-background">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
@@ -116,13 +130,13 @@ const CoursesSection = ({ t, lang }) => {
                   <span className={`font-semibold ${course.is_free ? 'text-accent' : 'text-text'}`}>
                     {course.is_free ? t.courses.free : formatPrice(course.price, course.currency)}
                   </span>
-                  <Link
-                    to="/courses"
+                  <button
+                    onClick={() => handleRegisterClick(course)}
                     className="inline-flex items-center gap-1 text-accent font-medium hover:gap-2 transition-all"
                   >
                     {t.courses.register}
                     <ArrowRight className="w-4 h-4" />
-                  </Link>
+                  </button>
                 </div>
               </div>
             </div>
@@ -141,6 +155,15 @@ const CoursesSection = ({ t, lang }) => {
         </div>
       </div>
     </section>
+
+    {showRegistration && selectedCourse && (
+      <CourseRegistration
+        course={selectedCourse}
+        lang={lang}
+        onClose={handleCloseRegistration}
+      />
+    )}
+  </>
   );
 };
 

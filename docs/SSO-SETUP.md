@@ -35,6 +35,16 @@ This document contains all the configuration details for Single Sign-On (SSO) us
 | **Admin Username** | `admin@zitadel.zitadel.rapid-works.io` |
 | **Admin Password** | `RapidWorks_2026_Secure!` |
 
+### Directus Admin Credentials
+
+| Field | Value |
+|-------|-------|
+| **Admin Email** | `admin@rapid-works.io` |
+| **Initial Password** | `RapidWorks_2026_Secure!` |
+| **Login Method** | Zitadel SSO only (local password disabled) |
+
+> **Note:** `admin@zitadel.zitadel.rapid-works.io` is the Zitadel console admin only — use it exclusively to manage Zitadel itself (users, apps, organizations) at `https://zitadel.rapid-works.io/ui/console`. It does **not** grant access to Directus or the BOS Dashboard.
+
 ### OIDC Endpoints
 
 | Endpoint | URL |
@@ -533,11 +543,21 @@ For a user to successfully authenticate via SSO to Directus, they must have:
 | Test Tenant Editor | Content editing for test tenant |
 | Public API | API access only (for frontend) |
 
-### Directus Users to Create/Map
+### Current Directus SSO Users
 
-Ensure these email addresses exist in Directus with appropriate roles:
-- `samuel.donkor@rapid-works.io` → Administrator
-- `leila.momen@taxandpurpose.com` → Tax & Purpose Editor
+These users have been configured for Zitadel SSO (`provider=zitadel`):
+
+| Email | Role | Notes |
+|-------|------|-------|
+| `admin@rapid-works.io` | Administrator | Local password login disabled |
+| `leila.momen@taxandpurpose.com` | Tax & Purpose Editor | Client user |
+
+> **Warning:** Once a user's `provider` is set to `zitadel`, their local Directus password login is disabled. They can only login via SSO. If you need to revert this, update `provider` back to `default` via the database:
+> ```bash
+> ssh root@91.98.121.89
+> podman exec database_pg psql -U taxpurpose_user -d taxpurpose_directus -c \
+>   "UPDATE directus_users SET provider='default', external_identifier=NULL WHERE email='user@email.com';"
+> ```
 
 ---
 
@@ -682,6 +702,102 @@ To add a new application to the SSO:
 
 ---
 
+## Useful Commands Reference
+
+A complete list of commands used during setup and debugging.
+
+### SSH into Server
+
+```bash
+ssh root@91.98.121.89
+```
+
+### Directus — Get Admin Token
+
+```bash
+curl -s "https://directus.rapid-works.io/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{"email": "admin@rapid-works.io", "password": "YOUR_PASSWORD"}'
+```
+
+### Directus — List All Users
+
+```bash
+curl -s "https://directus.rapid-works.io/users" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+### Directus — Find a User by Email
+
+```bash
+curl -s "https://directus.rapid-works.io/users?filter[email][_eq]=user@email.com" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+### Directus — List All Roles
+
+```bash
+curl -s "https://directus.rapid-works.io/roles" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+### Directus — Update User (set SSO provider via API)
+
+```bash
+curl -X PATCH "https://directus.rapid-works.io/users/USER_ID" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"provider": "zitadel", "external_identifier": "user@email.com"}'
+```
+
+### Directus — Update User Directly in Database
+
+Use this when the API login is unavailable (e.g. admin password unknown/changed):
+
+```bash
+ssh root@91.98.121.89
+podman exec database_pg psql -U taxpurpose_user -d taxpurpose_directus -c \
+  "UPDATE directus_users SET provider='zitadel', external_identifier='user@email.com' WHERE email='user@email.com';"
+```
+
+### Directus — Revert User to Local Login
+
+```bash
+podman exec database_pg psql -U taxpurpose_user -d taxpurpose_directus -c \
+  "UPDATE directus_users SET provider='default', external_identifier=NULL WHERE email='user@email.com';"
+```
+
+### Directus — Check SSO Provider is Active
+
+```bash
+curl -s "https://directus.rapid-works.io/auth" | python3 -m json.tool
+```
+
+### Directus — Restart After Config Changes
+
+```bash
+ssh root@91.98.121.89
+cd /opt/directus
+podman-compose down
+podman-compose up -d
+```
+
+### Directus — Tail Logs (debug SSO errors)
+
+```bash
+podman logs --tail 50 directus 2>&1
+# Filter for SSO errors only:
+podman logs --tail 100 directus 2>&1 | grep -i -E "(error|fail|zitadel|openid)"
+```
+
+### Verify Zitadel OIDC Discovery
+
+```bash
+curl -s "https://zitadel.rapid-works.io/.well-known/openid-configuration" | python3 -m json.tool
+```
+
+---
+
 ## Deployment
 
 ### Build and Deploy to Hetzner
@@ -710,4 +826,4 @@ The `.github/workflows/deploy-uat.yml` automatically deploys to Hetzner when pus
 
 ---
 
-*Last updated: May 15, 2026*
+*Last updated: May 21, 2026*
