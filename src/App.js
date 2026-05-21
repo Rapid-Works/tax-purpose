@@ -39,6 +39,7 @@ const colors = {
 // Component for the main page content
 const HomePageContent = ({ t, lang, services, currentTestimonials }) => {
   const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
+  const [workshopModalUrl, setWorkshopModalUrl] = useState(null);
 
   return (
     <>
@@ -330,15 +331,13 @@ const HomePageContent = ({ t, lang, services, currentTestimonials }) => {
                     <Calendar className="w-3.5 h-3.5" />
                     {lvl.date}
                   </div>
-                  <a
-                    href={lvl.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <button
+                    onClick={() => setWorkshopModalUrl(lvl.link)}
                     className="inline-flex items-center gap-2 text-sm font-medium text-accent hover:gap-3 transition-all duration-300 group/link"
                   >
                     {t.workshops.register}
                     <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-300" />
-                  </a>
+                  </button>
                 </div>
               </div>
             ))}
@@ -475,6 +474,29 @@ const HomePageContent = ({ t, lang, services, currentTestimonials }) => {
           </div>
         </div>
       </section>
+
+      {/* Workshop Registration Modal */}
+      {workshopModalUrl && (
+        <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl flex flex-col" style={{ height: '85vh' }}>
+            <div className="flex justify-between items-center p-4 border-b border-primary/20">
+              <h3 className="text-lg font-semibold text-text font-serif">{t.workshops.register}</h3>
+              <button
+                onClick={() => setWorkshopModalUrl(null)}
+                className="p-2 rounded-full hover:bg-primary/10 text-text transition-colors"
+                aria-label="Close"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <iframe
+              src={workshopModalUrl}
+              className="flex-1 w-full rounded-b-2xl"
+              title="Workshop Registration"
+            />
+          </div>
+        </div>
+      )}
 
       {/* Terms Explanation Modal */}
       {isTermsModalOpen && (
