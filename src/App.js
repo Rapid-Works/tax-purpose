@@ -378,8 +378,8 @@ const HomePageContent = ({ t, lang, services, currentTestimonials }) => {
       {/* Blog Section */}
       <Blog t={t} lang={lang} />
 
-      {/* Courses Section */}
-      <CoursesSection t={t} lang={lang} />
+      {/* Courses Section - hidden until ready */}
+      {/* <CoursesSection t={t} lang={lang} /> */}
 
       {/* Testimonials Section */}
       <section id="testimonials" className="pt-12 pb-24 relative bg-background">
