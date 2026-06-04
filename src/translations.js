@@ -65,6 +65,11 @@ export const translations = {
       },
       learnMore: "Learn more"
     },
+    workshops: {
+      tag: "Workshops & Keynotes",
+      title: "Workshops & Keynotes",
+      description: "Interactive sessions tailored for sustainable transformations."
+    },
     about: {
       tag: "My Vision",
       title: "Driving Change Through Tax Expertise",
@@ -539,6 +544,11 @@ export const translations = {
         }
       },
       learnMore: "Mehr erfahren"
+    },
+    workshops: {
+      tag: "Workshops & Keynotes",
+      title: "Workshops & Keynotes",
+      description: "Interaktive Formate für nachhaltige Transformation."
     },
     about: {
       tag: "Meine Vision",

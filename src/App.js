@@ -98,7 +98,7 @@ const HomePageContent = ({ t, lang, services, currentTestimonials }) => {
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <span className="inline-flex px-4 py-1.5 text-sm font-medium bg-accent text-white rounded-full shadow-md">
-              {t.beratungsformate.tag}
+              {t.services.tag}
             </span>
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-text font-serif">
               {t.services.title}
@@ -149,12 +149,12 @@ const HomePageContent = ({ t, lang, services, currentTestimonials }) => {
               {t.workshops.tag}
             </span>
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-text font-serif">
-              Workshops & Keynotes
+              {t.workshops.title}
             </h2>
           </div>
           {/* Workshop custom content or dynamic indicators go here */}
           <div className="max-w-3xl mx-auto text-center text-text/80">
-            <p className="text-lg font-light">Interactive sessions tailored for sustainable transformations.</p>
+            <p className="text-lg font-light">{t.workshops.description}</p>
           </div>
         </div>
       </section>
