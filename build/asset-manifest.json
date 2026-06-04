@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/static/css/main.70e30fcc.css",
+    "main.js": "/static/js/main.d3363160.js",
+    "static/js/488.24a15aa2.chunk.js": "/static/js/488.24a15aa2.chunk.js",
+    "static/media/leila3.jpeg": "/static/media/leila3.127d957a001a543a5ec0.jpeg",
+    "static/media/leila1.jpeg": "/static/media/leila1.3e77abc33cd2ae8393d3.jpeg",
+    "static/media/leila2.jpeg": "/static/media/leila2.d65f865857c55dfc8324.jpeg",
+    "static/media/leilalogo.png": "/static/media/leilalogo.fe24e77f64ecc599f14f.png",
+    "static/media/leilalogo_filled_white.png": "/static/media/leilalogo_filled_white.22aa0aac55f71990a56b.png",
+    "static/media/big4.png": "/static/media/big4.21815c059fc25d9afb37.png",
+    "index.html": "/index.html",
+    "main.70e30fcc.css.map": "/static/css/main.70e30fcc.css.map",
+    "main.d3363160.js.map": "/static/js/main.d3363160.js.map",
+    "488.24a15aa2.chunk.js.map": "/static/js/488.24a15aa2.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.70e30fcc.css",
+    "static/js/main.d3363160.js"
+  ]
+}
