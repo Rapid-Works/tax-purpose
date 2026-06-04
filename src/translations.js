@@ -65,10 +65,78 @@ export const translations = {
       },
       learnMore: "Learn more"
     },
+    beratungsformate: {
+      tag: "Consulting Formats",
+      title: "Individual Consulting Formats",
+      description: "At tax&purpose there are no standard solutions: Your offering is individually tailored to your specific questions and topics – for you as a founder, start-up, social entrepreneur, SME in transition, or globally thinking company. The following four consulting formats serve as guidelines.",
+      formats: [
+        {
+          title: "Clarity & Orientation",
+          duration: "60-90 Minutes",
+          items: ["Ad-hoc orientation", "Clarification of specific tax questions"]
+        },
+        {
+          title: "Development & Structuring",
+          duration: "2-8 Hours, 4-6 Sessions",
+          items: ["Foundations", "Development", "Expert opinions (initial and follow-up consultation)"]
+        },
+        {
+          title: "Strategy & Transaction",
+          duration: "From 8 Hours on Project Basis",
+          items: ["More complex projects", "Cross-border, hybrid structures, (re)-structuring"]
+        },
+        {
+          title: "Strategic Sparring",
+          duration: "Ongoing Support",
+          items: ["Proactive safeguarding", "Proactive structuring"]
+        }
+      ]
+    },
     workshops: {
-      tag: "Workshops & Keynotes",
-      title: "Workshops & Keynotes",
-      description: "Interactive sessions tailored for sustainable transformations."
+      tag: "Workshops",
+      title: "Workshop Series Purpose, Impact & Substance",
+      description: "In the <strong>Transformation Economy</strong>, sustainable purpose marks the new standard – I show you how to master the <strong>Twin Transformation</strong> in a legally secure way on the foundation of the <strong>Purpose Economy</strong>. In compact briefings, complex visions are translated into the necessary tools for a sovereign and impactful corporate architecture.",
+      levels: [
+        {
+          level: "Level 1",
+          subtitle: "Founding with Substance",
+          title: "Strategic Blueprint for Founders:",
+          description: "Legal form, governance and the architecture between profit and impact",
+          date: "Thu, 4 June 2026 · 7:00 PM (CET)",
+          link: "https://watch.getcontrast.io/register/taxandpurpose-purpose-impact-substanz-level-1-grunden-mit-substanz-2?utm_source=webiste&utm_medium=banner"
+        },
+        {
+          level: "Level 2",
+          subtitle: "Boundaries with Substance",
+          title: "Scale globally and work mobile:",
+          description: "Statics, compliance and substance as well as the protection of your purpose in international tax law",
+          date: "Tue, 9 June 2026 · 7:00 PM (CET)",
+          link: "https://watch.getcontrast.io/register/taxandpurpose-purpose-impact-substanz-level-2-grenzen-mit-substanz?utm_source=website&utm_medium=banner"
+        },
+        {
+          level: "Level 3",
+          subtitle: "Impact with Substance",
+          title: "The Impact Clockwork:",
+          description: "Interlocking hybrid models in a tax-legally secure manner, anchoring the mission and validating social added value",
+          date: "Thu, 11 June 2026 · 7:00 PM (CET)",
+          link: "https://watch.getcontrast.io/register/taxandpurpose-purpose-impact-substanz-level-3-wirkung-mit-substanz?utm_source=website&utm_medium=banner"
+        }
+      ],
+      register: "Register for Free",
+      free: {
+        title: "Free",
+        items: [
+          "Introduction to and awareness of the architectural key decisions",
+          "30 minutes, one level per week"
+        ]
+      },
+      deepDive: {
+        title: "Deep Dive",
+        items: [
+          "In-depth explanations and practical examples",
+          "2 blocks of 120 minutes per level (4 hours in total spread over 2 weeks), plus one individual 1:1 session"
+        ]
+      }
     },
     about: {
       tag: "My Vision",
@@ -545,10 +613,78 @@ export const translations = {
       },
       learnMore: "Mehr erfahren"
     },
+    beratungsformate: {
+      tag: "Die Beratungsformate",
+      title: "Individuelle Beratungsformate",
+      description: "Bei tax&purpose gibt es keine Standardlösungen: Dein Angebot wird individuell auf deine spezifischen Fragestellungen und Themen zugeschnitten – für dich als Gründer, Start-up, Social Entrepreneur, KMU im Wandel oder global denkendes Unternehmen. Als Wegweiser dienen die folgenden vier Beratungsformate.",
+      formats: [
+        {
+          title: "Klarheit & Orientierung",
+          duration: "60-90 Minuten",
+          items: ["Ad-hoc Orientierung", "Klärung spezifischer steuerlicher Fachfragen"]
+        },
+        {
+          title: "Aufbau & Strukturierung",
+          duration: "2-8 Stunden, 4-6 Sessions",
+          items: ["Gründungen", "Aufbau", "(Kurz)gutachten (Erst- und Nachbesprechung)"]
+        },
+        {
+          title: "Strategie- und Transaktion",
+          duration: "Ab 8 Stunden auf Projektbasis",
+          items: ["Komplexere Vorhaben", "Cross-Border, Hybridstrukturen, (Re)-Strukturierungen"]
+        },
+        {
+          title: "Strategisches Sparring",
+          duration: "Fortlaufende Begleitung",
+          items: ["Proaktive Absicherung", "Proaktive Gestaltung"]
+        }
+      ]
+    },
     workshops: {
-      tag: "Workshops & Keynotes",
-      title: "Workshops & Keynotes",
-      description: "Interaktive Formate für nachhaltige Transformation."
+      tag: "Die Workshops",
+      title: "Workshopreihe Purpose, Impact & Substanz",
+      description: "In der <strong>Transformation Economy</strong> markiert nachhaltige Sinnstiftung den neuen Standard – ich zeige dir, wie du die <strong>Twin Transformation</strong> rechtssicher auf dem Fundament der <strong>Purpose Economy</strong> meisterst. In kompakten Briefings werden komplexe Visionen in das notwendige Handwerkszeug für eine souveräne und wirkungsvolle Unternehmensarchitektur übersetzt.",
+      levels: [
+        {
+          level: "Level 1",
+          subtitle: "Gründen mit Substanz",
+          title: "Strategischer Bauplan für Gründer:",
+          description: "Rechtsform, Governance und die Architektur zwischen Profit und Impact",
+          date: "Mi, 03. Juni 2026 - 19:00 Uhr",
+          link: "https://watch.getcontrast.io/register/taxandpurpose-purpose-impact-substanz-level-1-grunden-mit-substanz-2?utm_source=webiste&utm_medium=banner"
+        },
+        {
+          level: "Level 2",
+          subtitle: "Grenzen mit Substanz",
+          title: "Global skalieren und mobil arbeiten:",
+          description: "Statik, Compliance und Substanz sowie der Schutz deines Purpose im internationalen Steuerrecht",
+          date: "Di, 09. Juni 2026 - 19:00 Uhr",
+          link: "https://watch.getcontrast.io/register/taxandpurpose-purpose-impact-substanz-level-2-grenzen-mit-substanz?utm_source=website&utm_medium=banner"
+        },
+        {
+          level: "Level 3",
+          subtitle: "Wirkung mit Substanz",
+          title: "Das Impact-Uhrwerk:",
+          description: "Hybrid-Modelle steuer(rechts)sicher verzahnen, die Mission verankern und gesellschaftlichen Mehrwert validieren",
+          date: "Do, 11. Juni 2026 - 19:00 Uhr",
+          link: "https://watch.getcontrast.io/register/taxandpurpose-purpose-impact-substanz-level-3-wirkung-mit-substanz?utm_source=website&utm_medium=banner"
+        }
+      ],
+      register: "Kostenlos anmelden",
+      free: {
+        title: "Kostenlos",
+        items: [
+          "Vermittlung von und Sensibilisierung für die architektonischen Weichenstellungen",
+          "30 Minuten, ein Level pro Woche"
+        ]
+      },
+      deepDive: {
+        title: "Deep Dive",
+        items: [
+          "Vertiefende Erläuterungen und Praxisbeispiele",
+          "Je Level 2 Blöcke à 120 Minuten (insgesamt 4 Stunden verteilt auf 2 Wochen), eine zusätzliche individuelle 1:1 Session"
+        ]
+      }
     },
     about: {
       tag: "Meine Vision",

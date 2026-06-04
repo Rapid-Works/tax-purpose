@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { Menu, X, Leaf, Users, Globe, Linkedin, Check, ChevronDown, BookOpen, ArrowUpRight } from "lucide-react"
+import { Menu, X, Leaf, Users, Globe, Linkedin, Check, ChevronDown, BookOpen, ArrowUpRight, Calendar, ArrowRight } from "lucide-react"
 import bigFourImage from './images/big4.png'
 import leilaHeroImage from './images/leila1.jpeg'
 // eslint-disable-next-line no-unused-vars
@@ -33,6 +33,7 @@ const colors = {
 // Component for the main page content
 const HomePageContent = ({ t, lang, services, currentTestimonials }) => {
   const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
+  const [workshopModalUrl, setWorkshopModalUrl] = useState(null);
 
   return (
     <>
@@ -93,8 +94,8 @@ const HomePageContent = ({ t, lang, services, currentTestimonials }) => {
         </div>
       </section>
 
-    {/* 1. BERATUNGSFORMATE SECTION (Moved to Top slot) */}
-    <section id="services" className="py-32 relative bg-background overflow-hidden">
+      {/* Services Section */}
+      <section id="services" className="py-32 relative bg-white overflow-hidden">
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <span className="inline-flex px-4 py-1.5 text-sm font-medium bg-accent text-white rounded-full shadow-md">
@@ -141,25 +142,113 @@ const HomePageContent = ({ t, lang, services, currentTestimonials }) => {
         </div>
       </section>
 
-      {/* 2. WORKSHOPS SECTION (Moved to Second slot) */}
-      <section id="workshops" className="py-32 relative bg-white overflow-hidden">
+      {/* Beratungsformate Section */}
+      <section id="beratungsformate" className="py-24 relative bg-white overflow-hidden">
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <span className="inline-flex px-4 py-1.5 text-sm font-medium bg-accent text-white rounded-full shadow-md">
-              {t.workshops.tag}
+              {t.beratungsformate.tag}
             </span>
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-text font-serif">
-              {t.workshops.title}
-            </h2>
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-text font-serif mt-6">{t.beratungsformate.title}</h2>
+            <p className="mt-4 text-lg text-text/80 max-w-3xl mx-auto font-light">
+              {t.beratungsformate.description}
+            </p>
           </div>
-          {/* Workshop custom content or dynamic indicators go here */}
-          <div className="max-w-3xl mx-auto text-center text-text/80">
-            <p className="text-lg font-light">{t.workshops.description}</p>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {t.beratungsformate.formats.map((format, i) => (
+              <div key={i} className="group bg-white rounded-2xl p-6 border border-primary/20 hover:border-accent/30 hover:shadow-xl transition-all duration-300">
+                <div className="h-1 w-12 bg-accent rounded-full mb-4 group-hover:w-16 transition-all duration-300"></div>
+                <h3 className="text-lg font-bold text-text font-serif mb-2 group-hover:text-accent transition-colors duration-300">{format.title}</h3>
+                <p className="text-sm font-semibold text-accent mb-4">{format.duration}</p>
+                <ul className="space-y-2">
+                  {format.items.map((item, j) => (
+                    <li key={j} className="flex items-start gap-2 text-sm text-text/70">
+                      <div className="flex-shrink-0 w-4 h-4 flex items-center justify-center rounded-full bg-accent/10 text-accent mt-0.5">
+                        <Check className="w-2.5 h-2.5" />
+                      </div>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* 3. ABOUT SECTION (Moved to Third slot) */}
+      {/* Workshops Section */}
+      <section id="workshops" className="py-24 relative bg-background overflow-hidden">
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <span className="inline-flex px-4 py-1.5 text-sm font-medium bg-accent text-white rounded-full shadow-md">
+              {t.workshops.tag}
+            </span>
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-text font-serif mt-6">{t.workshops.title}</h2>
+            <p
+              className="mt-4 text-lg text-text/80 max-w-3xl mx-auto font-light"
+              dangerouslySetInnerHTML={{ __html: t.workshops.description }}
+            />
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
+            {t.workshops.levels.map((lvl, i) => (
+              <div key={i} className="group bg-white rounded-2xl p-6 border border-primary/10 hover:border-accent/20 hover:shadow-lg transition-all duration-300 flex flex-col">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-xs font-medium text-accent bg-accent/10 px-2.5 py-1 rounded-full">{lvl.level}</span>
+                </div>
+                <p className="text-lg font-semibold text-text font-serif mb-3 group-hover:text-accent transition-colors duration-300">{lvl.subtitle}</p>
+                <p className="text-sm font-medium text-text/80 mb-1">{lvl.title}</p>
+                <p className="text-sm text-text/60 leading-relaxed mb-6">{lvl.description}</p>
+                <div className="mt-auto space-y-3">
+                  <div className="flex items-center gap-2 text-xs text-text/50">
+                    <Calendar className="w-3.5 h-3.5" />
+                    {lvl.date}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setWorkshopModalUrl(lvl.link)}
+                    className="inline-flex items-center gap-2 text-sm font-medium text-accent hover:gap-3 transition-all duration-300 group/link"
+                  >
+                    {t.workshops.register}
+                    <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-300" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="bg-white rounded-2xl p-6 border border-primary/10 grid sm:grid-cols-2 gap-6">
+            <div>
+              <p className="text-sm font-semibold text-text mb-3">{t.workshops.free.title}</p>
+              <ul className="space-y-2">
+                {t.workshops.free.items.map((item, i) => (
+                  <li key={i} className="flex items-start gap-2 text-sm text-text/60">
+                    <div className="flex-shrink-0 w-4 h-4 flex items-center justify-center rounded-full bg-accent/10 text-accent mt-0.5">
+                      <Check className="w-2.5 h-2.5" />
+                    </div>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-text mb-3">{t.workshops.deepDive.title}</p>
+              <ul className="space-y-2">
+                {t.workshops.deepDive.items.map((item, i) => (
+                  <li key={i} className="flex items-start gap-2 text-sm text-text/60">
+                    <div className="flex-shrink-0 w-4 h-4 flex items-center justify-center rounded-full bg-accent/10 text-accent mt-0.5">
+                      <Check className="w-2.5 h-2.5" />
+                    </div>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* About Section */}
       <section id="about" className="pt-32 pb-12 relative bg-background overflow-hidden">
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -329,6 +418,29 @@ const HomePageContent = ({ t, lang, services, currentTestimonials }) => {
       </section>
 
       {/* Terms Explanation Modal */}
+      {workshopModalUrl && (
+        <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl flex flex-col" style={{ height: '85vh' }}>
+            <div className="flex justify-between items-center p-4 border-b border-primary/20">
+              <h3 className="text-lg font-semibold text-text font-serif">{t.workshops.register}</h3>
+              <button
+                type="button"
+                onClick={() => setWorkshopModalUrl(null)}
+                className="p-2 rounded-full hover:bg-primary/10 text-text transition-colors"
+                aria-label="Close"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <iframe
+              src={workshopModalUrl}
+              className="flex-1 w-full rounded-b-2xl"
+              title="Workshop Registration"
+            />
+          </div>
+        </div>
+      )}
+
       {isTermsModalOpen && (
         <div className="fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity duration-300">
           <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] flex flex-col">
