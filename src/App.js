@@ -178,8 +178,7 @@ const HomePageContent = ({ t, lang, services, currentTestimonials }) => {
       </section>
 
       {/* Workshops Section */}
-      <section id="workshops" className="py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[#f9e9ea]" aria-hidden="true" />
+      <section id="workshops" className="py-24 relative bg-white overflow-hidden">
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <span className="inline-flex px-4 py-1.5 text-sm font-medium bg-accent text-white rounded-full shadow-md">
