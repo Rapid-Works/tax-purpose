@@ -93,47 +93,38 @@ const HomePageContent = ({ t, lang, services, currentTestimonials }) => {
         </div>
       </section>
 
-      {/* Services Section */}
-      <section id="services" className="py-32 relative bg-white overflow-hidden">
+    {/* 1. BERATUNGSFORMATE SECTION (Moved to Top slot) */}
+    <section id="services" className="py-32 relative bg-background overflow-hidden">
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <span className="inline-flex px-4 py-1.5 text-sm font-medium bg-accent text-white rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5">
-              {t.services.tag}
+            <span className="inline-flex px-4 py-1.5 text-sm font-medium bg-accent text-white rounded-full shadow-md">
+              {t.beratungsformate.tag}
             </span>
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-text font-serif relative">
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-text font-serif">
               {t.services.title}
-              <div className="absolute -inset-1 bg-primary/5 blur-3xl rounded-full opacity-50"></div>
             </h2>
             <p className="mt-4 text-lg text-text/90 max-w-2xl mx-auto font-light">
               {t.services.description}
             </p>
           </div>
 
-          {/* Services grid */}
           <div className="grid gap-8 lg:grid-cols-3">
             {services.map((service, index) => (
               <div
                 key={index}
-                className="group relative bg-white rounded-3xl p-8 hover:bg-white hover:shadow-xl transition-all duration-500 border border-[#e4bfbf]/30 overflow-hidden"
+                className="group relative bg-white rounded-3xl p-8 hover:shadow-xl transition-all duration-500 border border-[#e4bfbf]/30 overflow-hidden"
               >
-                {/* Add a decorative element that appears on hover */}
-                <div className="absolute -right-20 -top-20 w-40 h-40 bg-accent/5 rounded-full transform scale-0 group-hover:scale-100 transition-transform duration-700"></div>
-                
-                {/* Card content */}
                 <div className="relative">
-                  <div className="inline-flex p-4 rounded-2xl bg-accent/10 text-accent group-hover:scale-110 transition-all duration-500">
+                  <div className="inline-flex p-4 rounded-2xl bg-accent/10 text-accent">
                     {service.icon}
                   </div>
                 </div>
-                
-                <h3 className="mt-6 text-2xl font-semibold text-text group-hover:text-accent transition-colors duration-300 font-serif">
+                <h3 className="mt-6 text-2xl font-semibold text-text font-serif">
                   {service.title}
                 </h3>
-                
                 <p className="mt-4 text-text/70">
                   {service.description}
                 </p>
-                
                 <ul className="mt-6 space-y-3">
                   {service.features.map((feature, i) => (
                     <li key={i} className="flex items-start">
@@ -150,7 +141,25 @@ const HomePageContent = ({ t, lang, services, currentTestimonials }) => {
         </div>
       </section>
 
-      {/* About Section */}
+      {/* 2. WORKSHOPS SECTION (Moved to Second slot) */}
+      <section id="workshops" className="py-32 relative bg-white overflow-hidden">
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <span className="inline-flex px-4 py-1.5 text-sm font-medium bg-accent text-white rounded-full shadow-md">
+              {t.workshops.tag}
+            </span>
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-text font-serif">
+              Workshops & Keynotes
+            </h2>
+          </div>
+          {/* Workshop custom content or dynamic indicators go here */}
+          <div className="max-w-3xl mx-auto text-center text-text/80">
+            <p className="text-lg font-light">Interactive sessions tailored for sustainable transformations.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. ABOUT SECTION (Moved to Third slot) */}
       <section id="about" className="pt-32 pb-12 relative bg-background overflow-hidden">
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -165,10 +174,8 @@ const HomePageContent = ({ t, lang, services, currentTestimonials }) => {
             </p>
           </div>
 
-          {/* Value Proposition & Mindset Section */}
           <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-            {/* Value Proposition Card */}
-            <div className="bg-white/40 backdrop-blur-sm p-6 rounded-xl border border-primary/10 shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div className="bg-white/40 backdrop-blur-sm p-6 rounded-xl border border-primary/10 shadow-sm">
               <h3 className="text-xl font-semibold text-accent mb-4">{t.about.valueProposition.title}</h3>
               {t.about.valueProposition.intro && (
                 <p className="text-sm text-text/80 mb-4 italic">{t.about.valueProposition.intro}</p>
@@ -185,8 +192,7 @@ const HomePageContent = ({ t, lang, services, currentTestimonials }) => {
               </ul>
             </div>
 
-            {/* Mindset Change Card */}
-            <div className="bg-white/40 backdrop-blur-sm p-6 rounded-xl border border-primary/10 shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div className="bg-white/40 backdrop-blur-sm p-6 rounded-xl border border-primary/10 shadow-sm">
               <h3 className="text-xl font-semibold text-accent mb-4">{t.about.mindsetChange.title}</h3>
                <p className="text-sm text-text/70 italic mb-3">{t.about.mindsetChange.intro}</p>
               <ul className="space-y-3">
@@ -202,26 +208,16 @@ const HomePageContent = ({ t, lang, services, currentTestimonials }) => {
             </div>
           </div>
 
-          {/* Grid for the two images of Dr. Momen */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-4xl mx-auto mb-16">
-            <div className="rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <img
-                src={leilaAbout1}
-                alt="Dr. Leila Momen in a professional setting, sitting at a desk with documents and a laptop"
-                className="w-full h-full object-cover aspect-[4/3]"
-              />
+            <div className="rounded-2xl overflow-hidden shadow-lg">
+              <img src={leilaAbout1} alt="Dr. Leila Momen professional desk" className="w-full h-full object-cover aspect-[4/3]" />
             </div>
-            <div className="rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <img
-                src={leilaAbout2}
-                alt="Dr. Leila Momen outdoors, standing in front of greenery and smiling"
-                className="w-full h-full object-cover aspect-[4/3]"
-              />
+            <div className="rounded-2xl overflow-hidden shadow-lg">
+              <img src={leilaAbout2} alt="Dr. Leila Momen outdoors" className="w-full h-full object-cover aspect-[4/3]" />
             </div>
           </div>
 
-          {/* Core Principles Section */}
-          <div className="max-w-4xl mx-auto text-left mb-16 bg-white/40 backdrop-blur-sm p-6 rounded-xl border border-primary/10 shadow-sm">
+          <div className="max-w-4xl mx-auto text-left mb-16 bg-white/40 backdrop-blur-sm p-6 rounded-xl border border-primary/10">
             <h3 className="text-xl font-semibold text-accent mb-6">{t.about.corePrinciples.sectionTitle}</h3>
             <div className="space-y-6">
               {t.about.corePrinciples.items.map((principle, index) => (
@@ -232,33 +228,6 @@ const HomePageContent = ({ t, lang, services, currentTestimonials }) => {
               ))}
             </div>
           </div>
-
-          {/* Stats section */}
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 mt-16">
-            {[
-              t.about.stats.experience,
-              t.about.stats.countries,
-              t.about.stats.clients,
-              t.about.stats.savings,
-            ].map((stat, index) => (
-              <div key={index} className="group relative overflow-hidden">
-                <div className="relative bg-white/50 backdrop-blur-sm rounded-xl p-6 border border-primary/10 hover:border-accent/20 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 h-full flex flex-col">
-                  <div className="text-5xl font-bold text-accent font-serif relative">
-                    <span className="relative z-10">{stat.number}</span>
-                    <div className="absolute inset-0 bg-primary/5 blur-2xl rounded-full"></div>
-                    </div>
-                  <div className="mt-2 text-text/70 flex-grow">
-                    {stat.label}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-          {t.about.stats.statsDescription && (
-            <p className="mt-8 text-center text-text/80 max-w-2xl mx-auto">
-              {t.about.stats.statsDescription}
-            </p>
-          )}
         </div>
       </section>
 
