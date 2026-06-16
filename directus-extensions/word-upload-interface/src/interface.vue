@@ -120,10 +120,8 @@ export default {
       function processNode(node) {
         if (node.nodeType === Node.TEXT_NODE) {
           const text = node.textContent;
-          if (text.trim()) {
-            return { type: 'text', text };
-          }
-          return null;
+          if (text === '') return null;
+          return { type: 'text', text };
         }
 
         if (node.nodeType === Node.ELEMENT_NODE) {
@@ -148,6 +146,14 @@ export default {
           if (tag === 'em' || tag === 'i') {
             const children = processChildren(node);
             return children.map(c => c.type === 'text' ? { ...c, marks: [{ type: 'italic' }] } : c);
+          }
+          if (tag === 'a') {
+            const href = node.getAttribute('href') || '';
+            const children = processChildren(node);
+            const linkMark = { type: 'link', attrs: { href, target: '_blank', rel: 'noopener noreferrer' } };
+            return children.map(c => c.type === 'text'
+              ? { ...c, marks: [...(c.marks || []), linkMark] }
+              : c);
           }
           if (tag === 'blockquote') return { type: 'blockquote', content: processChildren(node) };
           if (tag === 'hr') return { type: 'horizontalRule' };

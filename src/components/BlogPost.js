@@ -4,6 +4,7 @@ import { getPostBySlug } from '../directus/client';
 import { ArrowLeft, Calendar } from 'lucide-react';
 import { generateHTML } from '@tiptap/html';
 import StarterKit from '@tiptap/starter-kit';
+import LinkExtension from '@tiptap/extension-link';
 import { Table } from '@tiptap/extension-table';
 import { TableRow } from '@tiptap/extension-table-row';
 import { TableCell } from '@tiptap/extension-table-cell';
@@ -16,6 +17,15 @@ const BlogPost = ({ t, lang }) => {
   const [error, setError] = useState(null);
 
   // Convert Tiptap JSON to HTML (handles both JSON and legacy HTML content)
+  const tiptapExtensions = useMemo(() => ([
+    StarterKit,
+    LinkExtension.configure({ openOnClick: true, HTMLAttributes: { target: '_blank', rel: 'noopener noreferrer' } }),
+    Table,
+    TableRow,
+    TableCell,
+    TableHeader,
+  ]), []);
+
   const contentHtml = useMemo(() => {
     if (!post?.content) return '';
 
@@ -29,7 +39,7 @@ const BlogPost = ({ t, lang }) => {
       try {
         const parsed = JSON.parse(post.content);
         if (parsed.type === 'doc') {
-          return generateHTML(parsed, [StarterKit, Table, TableRow, TableCell, TableHeader]);
+          return generateHTML(parsed, tiptapExtensions);
         }
       } catch {
         return post.content;
@@ -38,11 +48,11 @@ const BlogPost = ({ t, lang }) => {
 
     // If content is Tiptap JSON object
     if (typeof post.content === 'object' && post.content.type === 'doc') {
-      return generateHTML(post.content, [StarterKit, Table, TableRow, TableCell, TableHeader]);
+      return generateHTML(post.content, tiptapExtensions);
     }
 
     return '';
-  }, [post?.content]);
+  }, [post?.content, tiptapExtensions]);
 
   useEffect(() => {
     const fetchPost = async () => {

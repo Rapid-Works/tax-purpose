@@ -103,7 +103,8 @@ export const translations = {
           title: "Strategic Blueprint for Founders:",
           description: "Legal form, governance and the architecture between profit and impact",
           date: "Thu, 4 June 2026 · 7:00 PM (CET)",
-          link: "https://watch.getcontrast.io/register/taxandpurpose-purpose-impact-substanz-level-1-grunden-mit-substanz-2?utm_source=webiste&utm_medium=banner"
+          link: "https://watch.getcontrast.io/register/taxandpurpose-purpose-impact-substanz-level-1-grunden-mit-substanz-2?utm_source=webiste&utm_medium=banner",
+          past: true
         },
         {
           level: "Level 2",
@@ -123,6 +124,7 @@ export const translations = {
         }
       ],
       register: "Register for Free",
+      registerPast: "Already took place",
       free: {
         title: "Free",
         items: [
@@ -231,7 +233,38 @@ export const translations = {
       rights: "All rights reserved.",
       duExplanation: null,
       privacyLink: "Privacy Policy",
-      imprintLink: "Imprint"
+      imprintLink: "Imprint",
+      cookieSettingsLink: "Cookie Settings"
+    },
+    cookies: {
+      title: "Cookie Settings",
+      description: "We use cookies and similar technologies to operate this website securely and, with your consent, to load external content such as Google Maps. You can change your settings at any time.",
+      privacyLink: "Privacy Policy",
+      acceptAll: "Accept all",
+      acceptNecessary: "Only necessary",
+      settings: "Settings",
+      hideSettings: "Hide settings",
+      saveSettings: "Save selection",
+      close: "Close",
+      alwaysActive: "Always active",
+      mapBlocked: "Loading the map requires external content from Google Maps, which may set cookies. Please enable external content in the cookie settings.",
+      loadMap: "Open cookie settings",
+      categories: {
+        necessary: {
+          title: "Necessary",
+          description: "Required for basic website functions and storing your cookie preferences."
+        },
+        external: {
+          title: "External content",
+          description: "Allows embedded content from third-party providers such as Google Maps.",
+          label: "Allow external content"
+        },
+        analytics: {
+          title: "Analytics",
+          description: "Helps us understand how visitors use the website. Currently not in use.",
+          label: "Allow analytics"
+        }
+      }
     },
     partners: {
       tag: "Recommended by",
@@ -651,7 +684,8 @@ export const translations = {
           title: "Strategischer Bauplan für Gründer:",
           description: "Rechtsform, Governance und die Architektur zwischen Profit und Impact",
           date: "Mi, 03. Juni 2026 - 19:00 Uhr",
-          link: "https://watch.getcontrast.io/register/taxandpurpose-purpose-impact-substanz-level-1-grunden-mit-substanz-2?utm_source=webiste&utm_medium=banner"
+          link: "https://watch.getcontrast.io/register/taxandpurpose-purpose-impact-substanz-level-1-grunden-mit-substanz-2?utm_source=webiste&utm_medium=banner",
+          past: true
         },
         {
           level: "Level 2",
@@ -671,6 +705,7 @@ export const translations = {
         }
       ],
       register: "Kostenlos anmelden",
+      registerPast: "Bereits stattgefunden",
       free: {
         title: "Kostenlos",
         items: [
@@ -779,7 +814,38 @@ export const translations = {
       rights: "Alle Rechte vorbehalten.",
       duExplanation: "Auf dieser Webseite wird bewusst das 'Du' verwendet, um eine partnerschaftliche und zugängliche Atmosphäre zu schaffen. Selbstverständlich können wir im professionellen Kontext gerne zum 'Sie' wechseln.",
       privacyLink: "Datenschutz",
-      imprintLink: "Impressum"
+      imprintLink: "Impressum",
+      cookieSettingsLink: "Cookie-Einstellungen"
+    },
+    cookies: {
+      title: "Cookie-Einstellungen",
+      description: "Wir verwenden Cookies und ähnliche Technologien, um diese Website sicher zu betreiben und – mit deiner Einwilligung – externe Inhalte wie Google Maps zu laden. Du kannst deine Einstellungen jederzeit ändern.",
+      privacyLink: "Datenschutzerklärung",
+      acceptAll: "Alle akzeptieren",
+      acceptNecessary: "Nur notwendige",
+      settings: "Einstellungen",
+      hideSettings: "Einstellungen ausblenden",
+      saveSettings: "Auswahl speichern",
+      close: "Schließen",
+      alwaysActive: "Immer aktiv",
+      mapBlocked: "Zum Laden der Karte ist externer Inhalt von Google Maps erforderlich, der Cookies setzen kann. Bitte aktiviere externe Inhalte in den Cookie-Einstellungen.",
+      loadMap: "Cookie-Einstellungen öffnen",
+      categories: {
+        necessary: {
+          title: "Notwendig",
+          description: "Erforderlich für grundlegende Website-Funktionen und die Speicherung deiner Cookie-Einstellungen."
+        },
+        external: {
+          title: "Externe Inhalte",
+          description: "Ermöglicht eingebettete Inhalte von Drittanbietern wie Google Maps.",
+          label: "Externe Inhalte erlauben"
+        },
+        analytics: {
+          title: "Statistik",
+          description: "Hilft uns zu verstehen, wie Besucher die Website nutzen. Derzeit nicht im Einsatz.",
+          label: "Statistik erlauben"
+        }
+      }
     },
     partners: {
       tag: "Empfohlen von",

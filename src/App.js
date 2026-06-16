@@ -18,6 +18,8 @@ import Logo from "./components/Logo"
 import Blog from "./components/Blog"
 import BlogPost from "./components/BlogPost"
 import BlogList from "./components/BlogList"
+import { CookieConsentProvider, CookieSettingsLink } from "./components/CookieBanner"
+import GoogleMapEmbed from "./components/GoogleMapEmbed"
 
 console.log('Image path:', bigFourImage);
 
@@ -193,26 +195,43 @@ const HomePageContent = ({ t, lang, services, currentTestimonials }) => {
 
           <div className="grid md:grid-cols-3 gap-6 mb-8">
             {t.workshops.levels.map((lvl, i) => (
-              <div key={i} className="group bg-white rounded-2xl p-6 border border-primary/10 hover:border-accent/20 hover:shadow-lg transition-all duration-300 flex flex-col">
+              <div
+                key={i}
+                className={`group bg-white rounded-2xl p-6 border flex flex-col transition-all duration-300 ${
+                  lvl.past
+                    ? 'border-primary/10 pointer-events-none'
+                    : 'border-primary/10 hover:border-accent/20 hover:shadow-lg'
+                }`}
+              >
                 <div className="flex items-center gap-2 mb-4">
-                  <span className="text-xs font-medium text-accent bg-accent/10 px-2.5 py-1 rounded-full">{lvl.level}</span>
+                  <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${
+                    lvl.past ? 'text-text/40 bg-text/5' : 'text-accent bg-accent/10'
+                  }`}>{lvl.level}</span>
                 </div>
-                <p className="text-lg font-semibold text-text font-serif mb-3 group-hover:text-accent transition-colors duration-300">{lvl.subtitle}</p>
-                <p className="text-sm font-medium text-text/80 mb-1">{lvl.title}</p>
-                <p className="text-sm text-text/60 leading-relaxed mb-6">{lvl.description}</p>
+                <p className={`text-lg font-semibold font-serif mb-3 transition-colors duration-300 ${
+                  lvl.past ? 'text-text/50' : 'text-text group-hover:text-accent'
+                }`}>{lvl.subtitle}</p>
+                <p className={`text-sm font-medium mb-1 ${lvl.past ? 'text-text/40' : 'text-text/80'}`}>{lvl.title}</p>
+                <p className={`text-sm leading-relaxed mb-6 ${lvl.past ? 'text-text/35' : 'text-text/60'}`}>{lvl.description}</p>
                 <div className="mt-auto space-y-3">
-                  <div className="flex items-center gap-2 text-xs text-text/50">
+                  <div className={`flex items-center gap-2 text-xs ${lvl.past ? 'text-text/30' : 'text-text/50'}`}>
                     <Calendar className="w-3.5 h-3.5" />
                     {lvl.date}
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => setWorkshopModalUrl(lvl.link)}
-                    className="inline-flex items-center gap-2 text-sm font-medium text-accent hover:gap-3 transition-all duration-300 group/link"
-                  >
-                    {t.workshops.register}
-                    <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-300" />
-                  </button>
+                  {lvl.past ? (
+                    <span className="inline-flex items-center gap-2 text-sm font-medium text-text/40">
+                      {t.workshops.registerPast}
+                    </span>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setWorkshopModalUrl(lvl.link)}
+                      className="inline-flex items-center gap-2 text-sm font-medium text-accent hover:gap-3 transition-all duration-300 group/link"
+                    >
+                      {t.workshops.register}
+                      <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-300" />
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
@@ -559,15 +578,7 @@ const HomePageContent = ({ t, lang, services, currentTestimonials }) => {
               </div>
               
               <div className="md:col-span-3 rounded-xl overflow-hidden h-[400px] shadow-lg">
-                <iframe 
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2522.3846910328835!2d6.0772!3d50.7753!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c0995d4a4a1b1d%3A0x9b1fd1e6d3f3b5b0!2sJ%C3%BClicher%20Str.%2072a%2C%2052070%20Aachen%2C%20Germany!5e0!3m2!1sen!2sus!4v1620000000000!5m2!1sen!2sus" 
-                  width="100%" 
-                  height="100%" 
-                  style={{ border: 0 }} 
-                  allowFullScreen="" 
-                  loading="lazy"
-                  title="Office Location"
-                ></iframe>
+                <GoogleMapEmbed t={t} />
               </div>
             </div>
           </div>
@@ -730,6 +741,7 @@ function App() {
 
   return (
     <Router>
+      <CookieConsentProvider t={t}>
       <ScrollToTop />
       <div className="min-h-screen font-sans text-text bg-background">
         <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? "bg-background shadow-md backdrop-blur-sm" : "bg-transparent"
@@ -909,7 +921,7 @@ function App() {
                 <img src={leilaLogoWhite} alt="tax & purpose logo in white, stylized olive branch and text" className="h-12 w-auto" />
               </Link>
               <div className="flex space-x-4 pt-4">
-                <a href="https://linkedin.com/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-primary/20 transition-colors duration-300">
+                <a href="https://www.linkedin.com/in/leila-dr-momen/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-primary/20 transition-colors duration-300">
                   <Linkedin className="w-5 h-5" />
                 </a>
               </div>
@@ -961,11 +973,16 @@ function App() {
               <Link to="/imprint" className="hover:text-primary transition-colors ml-4">
                 {t.footer.imprintLink || "Imprint"}
               </Link>
+              <CookieSettingsLink
+                label={t.footer.cookieSettingsLink}
+                className="hover:text-primary transition-colors ml-4"
+              />
             </div>
           </div>
         </div>
       </footer>
     </div>
+      </CookieConsentProvider>
     </Router>
   )
 }

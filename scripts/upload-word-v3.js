@@ -10,6 +10,7 @@
  *   node scripts/upload-word-v3.js --all --dry-run
  */
 
+const { xmlToHtml } = require('../public/word-xml-utils');
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
@@ -56,151 +57,13 @@ async function parseDocx(filePath) {
 
   // Read document.xml
   const documentXml = fs.readFileSync(`${tmpDir}/word/document.xml`, 'utf8');
+  const relsPath = `${tmpDir}/word/_rels/document.xml.rels`;
+  const relsXml = fs.existsSync(relsPath) ? fs.readFileSync(relsPath, 'utf8') : '';
 
   // Clean up
   execSync(`rm -rf "${tmpDir}"`);
 
-  return documentXml;
-}
-
-function xmlToHtml(xml) {
-  let html = '';
-  let skipFirstH1 = true; // Skip the title since it's handled separately
-
-  // Extract paragraphs and tables with their styles
-  const paragraphRegex = /<w:p[^>]*>([\s\S]*?)<\/w:p>/g;
-  const tableRegex = /<w:tbl[^>]*>([\s\S]*?)<\/w:tbl>/g;
-
-  // First, find all tables and their positions
-  const tables = [];
-  let tableMatch;
-  while ((tableMatch = tableRegex.exec(xml)) !== null) {
-    tables.push({
-      start: tableMatch.index,
-      end: tableMatch.index + tableMatch[0].length,
-      content: tableMatch[0]
-    });
-  }
-
-  // Process paragraphs
-  let match;
-  while ((match = paragraphRegex.exec(xml)) !== null) {
-    // Skip if inside a table (we'll handle tables separately)
-    const isInTable = tables.some(t => match.index >= t.start && match.index <= t.end);
-    if (isInTable) continue;
-
-    const pContent = match[1];
-
-    // Get paragraph style
-    const styleMatch = pContent.match(/<w:pStyle w:val="([^"]+)"/);
-    const style = styleMatch ? styleMatch[1] : 'Normal';
-
-    // Get all text content with formatting
-    const runs = [];
-    const runRegex = /<w:r[^>]*>([\s\S]*?)<\/w:r>/g;
-    let runMatch;
-    while ((runMatch = runRegex.exec(pContent)) !== null) {
-      const runContent = runMatch[1];
-      const textMatch = runContent.match(/<w:t[^>]*>([^<]*)<\/w:t>/);
-      if (textMatch) {
-        const isBold = runContent.includes('<w:b/>') || runContent.includes('<w:b ');
-        const isItalic = runContent.includes('<w:i/>') || runContent.includes('<w:i ');
-        runs.push({ text: textMatch[1], bold: isBold, italic: isItalic });
-      }
-    }
-
-    if (runs.length === 0) continue;
-
-    const fullText = runs.map(r => r.text).join('').trim();
-    if (!fullText) continue;
-
-    // Map styles to HTML tags
-    let tag = 'p';
-    if (style === 'MdHeading1' || style === 'Titel') {
-      if (skipFirstH1) {
-        skipFirstH1 = false;
-        continue; // Skip title, it's handled separately
-      }
-      tag = 'h1';
-    } else if (style === 'MdHeading2') {
-      tag = 'h2';
-    } else if (style === 'MdHeading3') {
-      tag = 'h3';
-    } else if (style === 'MdHeading4') {
-      tag = 'h4';
-    } else if (style === 'MdListItem') {
-      tag = 'li';
-    } else if (style === 'MdHr') {
-      html += '<hr />\n';
-      continue;
-    } else if (style === 'MdSpace') {
-      continue;
-    }
-
-    // Build content with inline formatting
-    let content = '';
-    const allBold = runs.every(r => r.bold);
-    const isHeading = tag.startsWith('h');
-
-    for (const run of runs) {
-      let text = run.text
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
-
-      // Apply inline formatting (skip if heading or all runs are bold)
-      if (!isHeading && !allBold) {
-        if (run.bold) text = `<strong>${text}</strong>`;
-        if (run.italic) text = `<em>${text}</em>`;
-      }
-      content += text;
-    }
-
-    // If all runs are bold and it's a paragraph, wrap in strong
-    if (allBold && tag === 'p') {
-      content = `<strong>${content}</strong>`;
-    }
-
-    html += `<${tag}>${content}</${tag}>\n`;
-  }
-
-  // Process tables
-  for (const table of tables) {
-    html += '<table>\n';
-    const rowRegex = /<w:tr[^>]*>([\s\S]*?)<\/w:tr>/g;
-    let rowMatch;
-    let isFirstRow = true;
-
-    while ((rowMatch = rowRegex.exec(table.content)) !== null) {
-      html += '<tr>\n';
-      const cellRegex = /<w:tc[^>]*>([\s\S]*?)<\/w:tc>/g;
-      let cellMatch;
-
-      while ((cellMatch = cellRegex.exec(rowMatch[1])) !== null) {
-        const cellTag = isFirstRow ? 'th' : 'td';
-        const textRegex = /<w:t[^>]*>([^<]*)<\/w:t>/g;
-        let cellText = '';
-        let textMatch;
-        while ((textMatch = textRegex.exec(cellMatch[1])) !== null) {
-          cellText += textMatch[1];
-        }
-        html += `<${cellTag}>${cellText.trim()}</${cellTag}>\n`;
-      }
-      html += '</tr>\n';
-      isFirstRow = false;
-    }
-    html += '</table>\n';
-  }
-
-  // Post-process: group consecutive li items into ul
-  html = html.replace(/(<li>[\s\S]*?<\/li>\n)+/g, (match) => {
-    return '<ul>\n' + match + '</ul>\n';
-  });
-
-  // Fix date
-  html = html.replace(/12\. März 2026/g, '19. März 2026');
-
-  return html;
+  return { documentXml, relsXml };
 }
 
 async function uploadToDirectus(title, slug, content, summary) {
@@ -271,8 +134,8 @@ async function main() {
       console.log(`Processing: ${path.basename(file)}`);
       console.log('='.repeat(60));
 
-      const xml = await parseDocx(file);
-      const html = xmlToHtml(xml);
+      const { documentXml, relsXml } = await parseDocx(file);
+      const html = xmlToHtml(documentXml, relsXml);
 
       // Extract title from filename
       const filename = path.basename(file, '.docx');
