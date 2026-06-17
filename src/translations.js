@@ -112,7 +112,8 @@ export const translations = {
           title: "Scale globally and work mobile:",
           description: "Statics, compliance and substance as well as the protection of your purpose in international tax law",
           date: "Tue, 9 June 2026 · 7:00 PM (CET)",
-          link: "https://watch.getcontrast.io/register/taxandpurpose-purpose-impact-substanz-level-2-grenzen-mit-substanz?utm_source=website&utm_medium=banner"
+          link: "https://watch.getcontrast.io/register/taxandpurpose-purpose-impact-substanz-level-2-grenzen-mit-substanz?utm_source=website&utm_medium=banner",
+          past: true
         },
         {
           level: "Level 3",
@@ -120,7 +121,8 @@ export const translations = {
           title: "The Impact Clockwork:",
           description: "Interlocking hybrid models in a tax-legally secure manner, anchoring the mission and validating social added value",
           date: "Thu, 11 June 2026 · 7:00 PM (CET)",
-          link: "https://watch.getcontrast.io/register/taxandpurpose-purpose-impact-substanz-level-3-wirkung-mit-substanz?utm_source=website&utm_medium=banner"
+          link: "https://watch.getcontrast.io/register/taxandpurpose-purpose-impact-substanz-level-3-wirkung-mit-substanz?utm_source=website&utm_medium=banner",
+          past: true
         }
       ],
       register: "Register for Free",
@@ -693,7 +695,8 @@ export const translations = {
           title: "Global skalieren und mobil arbeiten:",
           description: "Statik, Compliance und Substanz sowie der Schutz deines Purpose im internationalen Steuerrecht",
           date: "Di, 09. Juni 2026 - 19:00 Uhr",
-          link: "https://watch.getcontrast.io/register/taxandpurpose-purpose-impact-substanz-level-2-grenzen-mit-substanz?utm_source=website&utm_medium=banner"
+          link: "https://watch.getcontrast.io/register/taxandpurpose-purpose-impact-substanz-level-2-grenzen-mit-substanz?utm_source=website&utm_medium=banner",
+          past: true
         },
         {
           level: "Level 3",
@@ -701,7 +704,8 @@ export const translations = {
           title: "Das Impact-Uhrwerk:",
           description: "Hybrid-Modelle steuer(rechts)sicher verzahnen, die Mission verankern und gesellschaftlichen Mehrwert validieren",
           date: "Do, 11. Juni 2026 - 19:00 Uhr",
-          link: "https://watch.getcontrast.io/register/taxandpurpose-purpose-impact-substanz-level-3-wirkung-mit-substanz?utm_source=website&utm_medium=banner"
+          link: "https://watch.getcontrast.io/register/taxandpurpose-purpose-impact-substanz-level-3-wirkung-mit-substanz?utm_source=website&utm_medium=banner",
+          past: true
         }
       ],
       register: "Kostenlos anmelden",

@@ -43,7 +43,16 @@ function Toggle({ checked, disabled, onChange, label }) {
   );
 }
 
-function CookieBannerPanel({ t, preferences, setPreferences, onClose, onSave, onAcceptAll, onAcceptNecessary }) {
+function CookieBannerPanel({
+  t,
+  preferences,
+  setPreferences,
+  onClose,
+  onSave,
+  onAcceptAll,
+  onAcceptNecessary,
+  showClose,
+}) {
   const [showSettings, setShowSettings] = useState(false);
 
   return (
@@ -52,6 +61,7 @@ function CookieBannerPanel({ t, preferences, setPreferences, onClose, onSave, on
       role="dialog"
       aria-labelledby="cookie-banner-title"
       aria-describedby="cookie-banner-description"
+      aria-modal="true"
     >
       <div className="mx-auto max-w-4xl rounded-2xl border border-primary/20 bg-white shadow-2xl">
         <div className="p-6 sm:p-8">
@@ -59,19 +69,21 @@ function CookieBannerPanel({ t, preferences, setPreferences, onClose, onSave, on
             <h2 id="cookie-banner-title" className="text-xl font-semibold text-text font-serif">
               {t.cookies.title}
             </h2>
-            <button
-              type="button"
-              onClick={onClose}
-              className="p-1 rounded-full text-text/50 hover:text-text hover:bg-primary/10 transition-colors"
-              aria-label={t.cookies.close}
-            >
-              <X className="w-5 h-5" />
-            </button>
+            {showClose && (
+              <button
+                type="button"
+                onClick={onClose}
+                className="p-1 rounded-full text-text/50 hover:text-text hover:bg-primary/10 transition-colors"
+                aria-label={t.cookies.close}
+              >
+                <X className="w-5 h-5" />
+              </button>
+            )}
           </div>
 
           <p id="cookie-banner-description" className="text-sm text-text/70 leading-relaxed mb-4">
             {t.cookies.description}{' '}
-            <Link to="/privacy-policy" className="text-accent hover:underline" onClick={onClose}>
+            <Link to="/privacy-policy" className="text-accent hover:underline">
               {t.cookies.privacyLink}
             </Link>
           </p>
@@ -145,11 +157,14 @@ function CookieBannerPanel({ t, preferences, setPreferences, onClose, onSave, on
 
 export function CookieConsentProvider({ children, t }) {
   const [consent, setConsent] = useState(() => getStoredConsent());
-  const [isBannerOpen, setIsBannerOpen] = useState(() => !getStoredConsent());
+  const [isEditingSettings, setIsEditingSettings] = useState(false);
   const [preferences, setPreferences] = useState(() => {
     const stored = getStoredConsent();
     return stored || DEFAULT_CONSENT;
   });
+
+  const needsConsent = consent === null;
+  const isBannerOpen = needsConsent || isEditingSettings;
 
   useEffect(() => {
     const handleUpdate = (event) => {
@@ -159,6 +174,7 @@ export function CookieConsentProvider({ children, t }) {
         external: Boolean(event.detail.external),
         analytics: Boolean(event.detail.analytics),
       });
+      setIsEditingSettings(false);
     };
 
     window.addEventListener('cookie-consent-updated', handleUpdate);
@@ -167,7 +183,7 @@ export function CookieConsentProvider({ children, t }) {
 
   const applyConsent = (nextConsent) => {
     setConsent(nextConsent);
-    setIsBannerOpen(false);
+    setIsEditingSettings(false);
   };
 
   const openSettings = () => {
@@ -179,19 +195,13 @@ export function CookieConsentProvider({ children, t }) {
         analytics: stored.analytics,
       });
     }
-    setIsBannerOpen(true);
+    setIsEditingSettings(true);
   };
 
   const handleAcceptAll = () => applyConsent(acceptAllCookies());
   const handleAcceptNecessary = () => applyConsent(acceptNecessaryCookies());
   const handleSave = () => applyConsent(saveConsent(preferences));
-  const handleClose = () => {
-    if (!consent) {
-      applyConsent(acceptNecessaryCookies());
-      return;
-    }
-    setIsBannerOpen(false);
-  };
+  const handleClose = () => setIsEditingSettings(false);
 
   return (
     <CookieConsentContext.Provider
@@ -214,6 +224,7 @@ export function CookieConsentProvider({ children, t }) {
           onSave={handleSave}
           onAcceptAll={handleAcceptAll}
           onAcceptNecessary={handleAcceptNecessary}
+          showClose={!needsConsent}
         />
       )}
     </CookieConsentContext.Provider>
